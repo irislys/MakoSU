@@ -7,7 +7,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 private const val MODULES_URL =
-    "https://raw.githubusercontent.com/Irislys/MakoSU_ModuleDownload/main/modules.json"
+    "https://gitee.com/JT22/MakoSU_ModuleDownload/raw/main/modules.json"
 
 data class ModuleDetail(
     val readme: String,

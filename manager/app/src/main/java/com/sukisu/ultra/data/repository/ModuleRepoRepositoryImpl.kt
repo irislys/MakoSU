@@ -15,7 +15,7 @@ class ModuleRepoRepositoryImpl : ModuleRepoRepository {
 
     companion object {
         private const val MODULES_URL =
-            "https://raw.githubusercontent.com/Irislys/MakoSU_ModuleDownload/main/modules.json"
+            "https://gitee.com/JT22/MakoSU_ModuleDownload/raw/main/modules.json"
 
         private fun stripTicks(s: String): String {
             val t = s.trim()
