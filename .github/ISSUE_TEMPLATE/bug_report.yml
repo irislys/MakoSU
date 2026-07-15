@@ -1,5 +1,5 @@
-name: Bug report / 错误报告
-description: Create a report to help us improve KernelSU / 创建报告以帮助我们改进 KernelSU
+name: MakoSU Bug report / 错误报告
+description: Report a reproducible MakoSU problem with device and KMI details / 提交包含设备与 KMI 信息的可复现问题
 labels: [bug]
 
 body:
@@ -9,11 +9,11 @@ body:
       options:
         - label: I have read the documents, and haven't found anything relevant / 我已阅读文档，且未找到相关内容
           required: true
-        - label: I surely I'm using the latest CI manager which is from main branch / 我确定我使用的是来自 main 分支的最新 CI 管理器
+        - label: I am using a released MakoSU Manager and matching KMI / 我使用的是正式 MakoSU Manager 和匹配的 KMI
           required: true
         - label: I have searched the issues and haven't found anything relevant / 我已搜索过 Issue 且未找到相关内容
           required: true
-        - label: I will upload bugreport file in KernelSU Manager - Settings - Report log / 我将在 KernelSU 管理器 - 设置 - 报告日志 中上传 bugreport 文件
+        - label: I will attach a redacted MakoSU log when requested / 如有需要我会附上已脱敏的 MakoSU 日志
           required: true
         - label: I know how to reproduce the issue which may not be specific to my device / 我知道如何复现该问题，且该问题可能不局限于我的设备
           required: false
@@ -21,10 +21,16 @@ body:
   - type: dropdown
     id: kernel_category
     attributes:
-      label: Kernel Version Category / 内核版本分类
+      label: KMI / KMI 版本
       options:
-        - "5.10+"
-        - "5.10-"
+        - "android12-5.10"
+        - "android13-5.10"
+        - "android13-5.15"
+        - "android14-5.15"
+        - "android14-6.1"
+        - "android15-6.6"
+        - "android16-6.12"
+        - "Custom / 自定义内核"
     validations:
       required: true
 
@@ -88,7 +94,7 @@ body:
       value: |
         - Device / 设备:
         - OS Version / 系统版本:
-        - KernelSU Version / KernelSU 版本:
+        - MakoSU Version / MakoSU 版本:
         - Kernel Version / 内核版本:
     validations:
       required: true

@@ -1,34 +1,34 @@
-name: Feature Request
-description: "Suggest an idea for this project"
+name: Feature request / 功能建议
+description: "Suggest a focused improvement for MakoSU / 提议一个明确、可维护的 MakoSU 改进"
 title: "[Feature]"
 labels: "enhancement"
 body:
   - type: markdown
     id: feature-info
     attributes:
-      value: "## Feature Infomation"
+      value: "## Feature information / 功能信息"
   - type: textarea
     id: feature-main
     validations:
       required: true
     attributes:
-      label: "Is your feature request related to a problem? Please describe."
-      description: "A clear and concise description of what the problem is."
+      label: "What problem would this solve? / 这个功能要解决什么问题？"
+      description: "Describe the device, workflow, or maintenance problem clearly. / 清楚描述设备、操作流程或维护问题。"
       placeholder: "I'm always frustrated when [...]"
   - type: textarea
     id: feature-solution
     validations:
       required: true
     attributes:
-      label: "Describe the solution you'd like."
-      description: "A clear and concise description of what you want to happen."
+      label: "Describe the proposed solution / 描述你的方案"
+      description: "Include compatibility and rollback considerations. / 请说明兼容性与回滚考虑。"
   - type: textarea
     id: feature-describe
     validations:
       required: true
     attributes:
-      label: "Describe alternatives you've considered."
-      description: "A clear and concise description of any alternative solutions or features you've considered."
+      label: "What alternatives have you considered? / 你考虑过哪些替代方案？"
+      description: "Explain why existing Manager or kernel flows are insufficient. / 说明现有管理器或内核流程为什么不够用。"
   - type: textarea
     id: feature-extra
     validations:
@@ -36,4 +36,3 @@ body:
     attributes:
       label: "Additional context"
       description: "Add any other context or screenshots about the feature request here."
-

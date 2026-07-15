@@ -4,6 +4,8 @@
 
 **English** | [简体中文](zh/README.md) | [繁體中文](zh-TW/README.md) | [日本語](ja/README.md) | [한국어](ko/README.md) | [Русский](ru/README.md) | [Türkçe](tr/README.md)
 
+[Website](https://spring-bulid.github.io/MakoSU/) | [Documentation](https://spring-bulid.github.io/MakoSU/guide/) | [Releases](https://github.com/Spring-bulid/MakoSU/releases) | [Issues](https://github.com/Spring-bulid/MakoSU/issues)
+
 MakoSU is a downstream of [SukiSU Ultra](https://github.com/SukiSU-Ultra/SukiSU-Ultra). This repository maintains the Manager, release KMI modules, SuSFS userspace support, and the related build scripts.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-orange.svg?logo=gnu)](../LICENSE)
