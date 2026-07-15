@@ -1,10 +1,12 @@
 use anyhow::{Context, Result, anyhow};
 use regex_lite::Regex;
 
+#[cfg(any(target_os = "android", test))]
 pub const fn is_gki_version(major: i32, minor: i32) -> bool {
     major > 5 || major == 5 && minor >= 10
 }
 
+#[cfg(any(target_os = "android", test))]
 pub fn parse_kmi_version(version: &str) -> Result<String> {
     let re = Regex::new(r"(\d+\.\d+)(?:\S+)?(android\d+)")?;
     let captures = re

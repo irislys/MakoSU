@@ -533,7 +533,7 @@ public class HanziToPinyin {
         for (Token token : tokens) {
             sb.append(token.target);
         }
-        return sb.toString().toLowerCase();
+        return sb.toString().toLowerCase(Locale.ROOT);
     }
 
     public static class Token {

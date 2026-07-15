@@ -1104,9 +1104,7 @@ pub fn run() -> Result<()> {
         Commands::Kpm { command } => {
             use crate::cli::kpm_cmd::Kpm;
             match command {
-                Kpm::Load { path, args } => {
-                    crate::kpm::load_module(path.to_str().unwrap(), args.as_deref())
-                }
+                Kpm::Load { path, args } => crate::kpm::load_module(path, args.as_deref()),
                 Kpm::Unload { name } => crate::kpm::unload_module(name),
                 Kpm::Num => crate::kpm::num().map(|_| ()),
                 Kpm::List => crate::kpm::list(),

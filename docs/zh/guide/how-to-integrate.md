@@ -1,6 +1,6 @@
-# 集成指导
+# MakoSU 集成指导
 
-SukiSU 可以集成到 GKI 和 non-GKI 内核中，并且已反向移植到 4.14 版本。
+MakoSU 可以集成到 GKI 和 non-GKI 内核中，但 non-GKI 必须针对设备源码单独适配，项目不会提供可通吃所有厂商内核的启动镜像。
 
 <!-- 应该是 3.4 版本，但 backslashxx 的 syscall manual hook 无法在 SukiSU 中使用-->
 
@@ -10,25 +10,23 @@ SukiSU 可以集成到 GKI 和 non-GKI 内核中，并且已反向移植到 4.14
 
 ## Hook 方法
 
-1. **KPROBES hook:**
+1. **KPROBES Hook：**
 
-   - GKI kernels 的默认 hook 方法。
-   - 需要 `# CONFIG_KSU_MANUAL_HOOK is not set`（未设定） & `CONFIG_KPROBES=y`
-   - 用作可加载的内核模块 (LKM).
+   - 当前 MakoSU 的默认 Hook 路径。
+   - 需要 `CONFIG_KPROBES=y` 和 `CONFIG_EXT4_FS=y`。
+   - 可编译为 LKM（`CONFIG_KSU=m`）或内置到内核（`CONFIG_KSU=y`）。
 
-2. **Manual hook:**
+2. **源码内置/手动适配：**
 
    <!-- - backslashxx's syscall manual hook: https://github.com/backslashxx/KernelSU/issues/5 (v1.5 version is not available at the moment, if you want to use it, please use v1.4 version, or standard KernelSU hooks)-->
 
-   - 需要 `CONFIG_KSU_MANUAL_HOOK=y`
-   - 需要 [`guide/how-to-integrate.md`](how-to-integrate.md)
-   - 需要 [https://github.com/~](https://github.com/tiann/KernelSU/blob/main/website/docs/guide/how-to-integrate-for-non-gki.md#manually-modify-the-kernel-source)
+   - 当前 MakoSU 不定义 `CONFIG_KSU_MANUAL_HOOK` 或 `CONFIG_KSU_TRACEPOINT_HOOK`，不要在配置中添加这两个旧选项。
+   - non-GKI 需要把 `kernel/` 集成到设备内核源码，并根据厂商 API、符号和 Hook 能力适配。
 
-3. **Tracepoint Hook:**
+3. **Tracepoint 能力：**
 
-   - 自 SukiSU commit [49b01aad](https://github.com/SukiSU-Ultra/SukiSU-Ultra/commit/49b01aad74bcca6dba5a8a2e053bb54b648eb124) 引入的 hook 方法
-   - 需要 `CONFIG_KSU_TRACEPOINT_HOOK=y`
-   - 需要 [`guide/tracepoint-hook.md`](tracepoint-hook.md)
+   - 是否可用由内核的 `CONFIG_TRACEPOINTS`、`CONFIG_HAVE_SYSCALL_TRACEPOINTS` 和架构决定。
+   - 具体符号和厂商实现不一致时，必须以目标内核的构建结果为准。
    
 <!-- This part refer to [rsuntk/KernelSU](https://github.com/rsuntk/KernelSU). -->
 
@@ -39,22 +37,16 @@ SukiSU 可以集成到 GKI 和 non-GKI 内核中，并且已反向移植到 4.14
 
 ## 与 kprobe 集成
 
-适用：
-
-- GKI 内核
-
-不适用：
-
-- non-GKI 内核
+适用：具备 `CONFIG_KPROBES=y` 且相关符号可用的 GKI 或 non-GKI 内核。
 
 KernelSU 使用 kprobe 机制来做内核的相关 hook，如果 _kprobe_ 可以在你编译的内核中正常运行，那么推荐用这个方法来集成。
 
-请参阅此文档 [https://github.com/~](https://github.com/tiann/KernelSU/blob/main/website/docs/guide/how-to-integrate-for-non-gki.md#integrate-with-kprobe)。虽然标题为“适用于 non-GKI”，但仅适用于 GKI。
+如果目标内核不提供所需 Kprobes/符号，请改用源码内置方式并逐项适配；不要仅凭主版本号强行加载 LKM。
 
-替换 KernelSU 添加到内核源代码树的步骤的执行命令为：
+从内核源码树执行以下命令，将当前 MakoSU 集成脚本下载并运行：
 
 ```sh
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s main
+curl -LSs "https://raw.githubusercontent.com/Spring-bulid/MakoSU/main/kernel/setup.sh" | bash
 ```
 
 ## 手动修改内核源代码
@@ -64,34 +56,18 @@ curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kern
 - GKI 内核
 - non-GKI 内核
 
-请参考此文档 [https://github.com/~ (non-GKI 内核集成)](https://github.com/tiann/KernelSU/blob/main/website/docs/guide/how-to-integrate-for-non-gki.md#manually-modify-the-kernel-source) 和 [https://github.com/~ (GKI 内核构建)](https://kernelsu.org/zh_CN/guide/how-to-build.html) 进行手动集成。虽然第一个链接的标题是“适用于 non-GKI”，但它也适用于 GKI。两者都可以正常工作。
-
-还有另一种集成方法，但是仍在开发中。
-
-<!-- 这是 backslashxx 的syscall manual hook，但目前无法使用。 -->
-
-将 KernelSU（SukiSU）添加到内核源代码树的步骤的运行命令将被替换为：
+请先准备可启动的设备内核源码，再运行上面的脚本。脚本默认克隆 MakoSU；可通过 `KSU_REPO` 和 `KSU_SOURCE_DIR` 覆盖仓库与本地路径。
 
 ### GKI 内核
 
 ```sh [bash]
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s main
+curl -LSs "https://raw.githubusercontent.com/Spring-bulid/MakoSU/main/kernel/setup.sh" | bash
 ```
 
 ### Built-in 内核
 
 ```sh [bash]
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s builtin
+curl -LSs "https://raw.githubusercontent.com/Spring-bulid/MakoSU/main/kernel/setup.sh" | KSU_SOURCE_DIR=/path/to/MakoSU bash
 ```
 
-### 带有 susfs 的 GKI / Built-in 内核（实验）
-
-```sh [bash]
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-{{branch}}
-```
-
-分支:
-
-- `main` (susfs-main)
-- `test` (susfs-test)
-- 版本号 (例如： susfs-1.5.7, 你需要在 [分支](https://github.com/SukiSU-Ultra/SukiSU-Ultra/branches) 里找到它)
+`CONFIG_KSU=m` 适合生成与目标内核完全匹配的 LKM；`CONFIG_KSU=y` 适合 non-GKI 的源码内置场景。两者都必须使用目标设备自己的 `.config`、符号和编译器验证。

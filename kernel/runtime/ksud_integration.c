@@ -609,10 +609,14 @@ static struct kprobe input_event_kp = {
     .symbol_name = "input_event",
     .pre_handler = input_handle_event_handler_pre,
 };
+static bool input_hook_registered;
 
 static void do_stop_input_hook(struct work_struct *work)
 {
-    unregister_kprobe(&input_event_kp);
+    if (input_hook_registered) {
+        unregister_kprobe(&input_event_kp);
+        input_hook_registered = false;
+    }
 }
 
 static void stop_init_rc_hook()
@@ -638,21 +642,25 @@ void __init ksu_ksud_init()
 {
     int ret;
 
+    INIT_WORK(&stop_input_hook_work, do_stop_input_hook);
+
     ksu_syscall_table_hook(__NR_read, ksu_sys_read, &orig_sys_read);
     ksu_syscall_table_hook(__NR_fstat, ksu_sys_fstat, &orig_sys_fstat);
 
     ret = register_kprobe(&input_event_kp);
     pr_info("ksud: input_event_kp: %d\n", ret);
-
-    INIT_WORK(&stop_input_hook_work, do_stop_input_hook);
+    input_hook_registered = ret == 0;
 }
 
 void __exit ksu_ksud_exit()
 {
-    // TODO:
-    // this should be done before unregister vfs_read_kp
-    // stop_init_rc_hook();
-    unregister_kprobe(&input_event_kp);
+    cancel_work_sync(&stop_input_hook_work);
+    stop_init_rc_hook();
+    do_stop_input_hook(NULL);
+
+    // The read proxies may still be finishing on another CPU after the
+    // syscall table is restored. Wait before releasing their backing buffer.
+    synchronize_rcu();
 
     if (module_rc_buf) {
         free_module_rc();

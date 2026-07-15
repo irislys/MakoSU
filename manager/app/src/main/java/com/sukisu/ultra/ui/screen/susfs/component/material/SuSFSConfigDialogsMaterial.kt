@@ -774,8 +774,8 @@ fun AddKstatPathItemCardMaterial(
 @Composable
 fun AppIconMaterial(
     packageName: String,
-    packageInfo: PackageInfo? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    packageInfo: PackageInfo? = null
 ) {
     val context = LocalContext.current
     var iconBitmap by remember(packageName, packageInfo) { mutableStateOf<ImageBitmap?>(null) }

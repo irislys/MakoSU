@@ -46,6 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.compose.ui.unit.sp
 import com.sukisu.ultra.Natives
 import com.sukisu.ultra.R
@@ -144,7 +145,11 @@ fun AppProfileScreenMiuix(
                         appUid = state.uid,
                         sharedUserId = if (state.isUidGroup) state.sharedUserId else "",
                         appVersionName = if (state.isUidGroup) "" else (state.appGroup.primary.packageInfo.versionName ?: ""),
-                        appVersionCode = if (state.isUidGroup) 0L else state.appGroup.primary.packageInfo.longVersionCode,
+                        appVersionCode = if (state.isUidGroup) {
+                            0L
+                        } else {
+                            PackageInfoCompat.getLongVersionCode(state.appGroup.primary.packageInfo)
+                        },
                         profile = state.profile,
                         isUidGroup = state.isUidGroup,
                         affectedApps = state.appGroup.apps,

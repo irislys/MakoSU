@@ -11,8 +11,8 @@ import com.sukisu.ultra.ui.screen.susfs.util.EnabledFeature
 @Composable
 fun FeatureStatusCard(
     feature: EnabledFeature,
-    onRefresh: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRefresh: (() -> Unit)? = null
 ) {
     when (LocalUiMode.current) {
         UiMode.Miuix -> FeatureStatusCardMiuix(

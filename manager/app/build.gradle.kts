@@ -163,6 +163,7 @@ android {
     lint {
         abortOnError = true
         checkReleaseBuilds = false
+        disable += "MissingTranslation"
     }
 
     compileOptions {

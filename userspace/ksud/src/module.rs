@@ -189,13 +189,13 @@ pub fn load_sepolicy_rule() -> Result<()> {
 }
 
 pub fn exec_script<T: AsRef<Path>>(path: T, wait: bool, timeout: Duration) -> Result<()> {
-    info!("exec {}", path.as_ref().display());
+    let path = path.as_ref();
+    info!("exec {}", path.display());
 
-    let is_module_script = path.as_ref().starts_with(defs::MODULE_DIR);
+    let is_module_script = path.starts_with(defs::MODULE_DIR);
     // Extract module_id from path if it matches /data/adb/modules/{id}/...
     let module_id = if is_module_script {
-        path.as_ref()
-            .strip_prefix(defs::MODULE_DIR)
+        path.strip_prefix(defs::MODULE_DIR)
             .ok()
             .and_then(|p| p.components().next())
             .and_then(|c| c.as_os_str().to_str())
@@ -215,7 +215,7 @@ pub fn exec_script<T: AsRef<Path>>(path: T, wait: bool, timeout: Duration) -> Re
             Err(e) => {
                 warn!(
                     "Invalid module ID '{id}' extracted from script path '{}': {e}",
-                    path.as_ref().display(),
+                    path.display(),
                 );
                 None
             }
@@ -224,7 +224,7 @@ pub fn exec_script<T: AsRef<Path>>(path: T, wait: bool, timeout: Duration) -> Re
     if is_module_script && module_id.is_none() {
         debug!(
             "Failed to extract module_id from script path '{}'. Script will run without KSU_MODULE environment variable.",
-            path.as_ref().display()
+            path.display()
         );
     }
 
@@ -240,20 +240,52 @@ pub fn exec_script<T: AsRef<Path>>(path: T, wait: bool, timeout: Duration) -> Re
             })
         };
     }
+    let parent = path
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .ok_or_else(|| anyhow!("script path has no usable parent: {}", path.display()))?;
+
     command = command
-        .current_dir(path.as_ref().parent().unwrap())
+        .current_dir(parent)
         .arg("sh")
-        .arg(path.as_ref())
+        .arg(path)
         .envs(get_common_script_envs(validated_module_id));
 
-    let result = {
-        if wait {
-            command.spawn()?.wait_timeout(timeout).map(|_| ())
-        } else {
-            command.spawn().map(|_| ())
+    if !wait {
+        command
+            .spawn()
+            .map(|_| ())
+            .map_err(|e| anyhow!("Failed to exec {}: {e}", path.display()))
+    } else {
+        let mut child = command
+            .spawn()
+            .map_err(|e| anyhow!("Failed to exec {}: {e}", path.display()))?;
+
+        match child
+            .wait_timeout(timeout)
+            .map_err(|e| anyhow!("Failed waiting for {}: {e}", path.display()))?
+        {
+            Some(status) if status.success() => Ok(()),
+            Some(status) => Err(anyhow!(
+                "Script {} exited with status {status}",
+                path.display()
+            )),
+            None => {
+                if let Err(error) = child.kill() {
+                    warn!(
+                        "Failed to stop timed out script {}: {error}",
+                        path.display()
+                    );
+                }
+                let _ = child.wait();
+                Err(anyhow!(
+                    "Script {} timed out after {} seconds",
+                    path.display(),
+                    timeout.as_secs()
+                ))
+            }
         }
-    };
-    result.map_err(|e| anyhow!("Failed to exec {}: {e}", path.as_ref().display()))
+    }
 }
 
 pub fn exec_stage_script(stage: &str, block: bool) -> Result<()> {
@@ -326,38 +358,42 @@ pub fn load_all_lua_modules(lua: &Lua) -> LuaResult<()> {
     };
 
     if modules_dir.exists() {
-        for entry in fs::read_dir(modules_dir)
-            .unwrap_or_else(|_| fs::read_dir("/dev/null").unwrap())
-            .flatten()
-        {
-            let path = entry.path();
-            if path.is_dir() {
-                let id = path.file_name().unwrap().to_string_lossy().to_string();
-                let package: Table = lua.globals().get("package")?;
-                let old_cpath: String = package.get("cpath")?;
-                let new_cpath = format!("{}/?.so;{old_cpath}", path.to_string_lossy());
-                package.set("cpath", new_cpath)?;
+        if let Ok(entries) = fs::read_dir(modules_dir) {
+            for entry in entries.flatten() {
+                let path = entry.path();
+                if path.is_dir() {
+                    let Some(id) = path
+                        .file_name()
+                        .map(|name| name.to_string_lossy().to_string())
+                    else {
+                        continue;
+                    };
+                    let package: Table = lua.globals().get("package")?;
+                    let old_cpath: String = package.get("cpath")?;
+                    let new_cpath = format!("{}/?.so;{old_cpath}", path.to_string_lossy());
+                    package.set("cpath", new_cpath)?;
 
-                let lua_file = path.join(format!("{id}.lua"));
+                    let lua_file = path.join(format!("{id}.lua"));
 
-                if lua_file.exists() {
-                    match fs::read_to_string(&lua_file) {
-                        Ok(code) => {
-                            match lua
-                                .load(&code)
-                                .set_name(&*lua_file.to_string_lossy())
-                                .eval::<Table>()
-                            {
-                                Ok(module) => {
-                                    modules.set(id.clone(), module.clone())?;
-                                }
-                                Err(e) => {
-                                    warn!("Failed to eval Lua {}: {}", lua_file.display(), e);
+                    if lua_file.exists() {
+                        match fs::read_to_string(&lua_file) {
+                            Ok(code) => {
+                                match lua
+                                    .load(&code)
+                                    .set_name(&*lua_file.to_string_lossy())
+                                    .eval::<Table>()
+                                {
+                                    Ok(module) => {
+                                        modules.set(id.clone(), module.clone())?;
+                                    }
+                                    Err(e) => {
+                                        warn!("Failed to eval Lua {}: {}", lua_file.display(), e);
+                                    }
                                 }
                             }
-                        }
-                        Err(e) => {
-                            warn!("Failed to read Lua {}: {e}", lua_file.display());
+                            Err(e) => {
+                                warn!("Failed to read Lua {}: {e}", lua_file.display());
+                            }
                         }
                     }
                 }

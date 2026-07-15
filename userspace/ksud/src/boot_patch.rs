@@ -988,37 +988,30 @@ fn rebuild_without_ksu(
     Ok(buf.into_inner())
 }
 
+#[cfg(target_os = "android")]
 pub fn read_ksu_config() -> Result<Vec<String>> {
-    #[cfg(target_os = "android")]
-    {
-        let boot_image_file = auto_boot_partition_path("", false, false, &None);
-        let bootimage_data = map_file(&boot_image_file)?;
-        let boot_image = BootImage::parse(&bootimage_data)?;
+    let boot_image_file = auto_boot_partition_path("", false, false, &None);
+    let bootimage_data = map_file(&boot_image_file)?;
+    let boot_image = BootImage::parse(&bootimage_data)?;
 
-        let (cpio, _) = if let Some(ramdisk_image) = boot_image.get_blocks().get_ramdisk() {
-            extract_ramdisk(ramdisk_image)?
-        } else {
-            bail!("No compatible ramdisk found.")
-        };
+    let (cpio, _) = if let Some(ramdisk_image) = boot_image.get_blocks().get_ramdisk() {
+        extract_ramdisk(ramdisk_image)?
+    } else {
+        bail!("No compatible ramdisk found.")
+    };
 
-        let config = cpio
-            .entry_by_name("ksu_config")
-            .and_then(CpioEntry::data)
-            .and_then(|v| str::from_utf8(v).ok())
-            .map(|v| {
-                v.split(' ')
-                    .map(str::trim)
-                    .filter(|s| !s.is_empty())
-                    .map(std::string::ToString::to_string)
-                    .collect()
-            })
-            .unwrap_or_default();
+    let config = cpio
+        .entry_by_name("ksu_config")
+        .and_then(CpioEntry::data)
+        .and_then(|v| str::from_utf8(v).ok())
+        .map(|v| {
+            v.split(' ')
+                .map(str::trim)
+                .filter(|s| !s.is_empty())
+                .map(std::string::ToString::to_string)
+                .collect()
+        })
+        .unwrap_or_default();
 
-        Ok(config)
-    }
-
-    #[cfg(not(target_os = "android"))]
-    {
-        Ok(Vec::new())
-    }
+    Ok(config)
 }

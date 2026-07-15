@@ -1,7 +1,5 @@
 package com.sukisu.ultra.magica;
 
-import static com.sukisu.ultra.magica.AppZygotePreload.TAG;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +8,7 @@ import android.util.Log;
 import com.sukisu.ultra.ui.util.KsuCliKt;
 
 public class BootCompletedReceiver extends BroadcastReceiver {
+    private static final String TAG = "KernelSUMagica";
 
     @Override
     public void onReceive(Context context, Intent intent) {

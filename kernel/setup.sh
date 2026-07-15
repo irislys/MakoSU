@@ -2,6 +2,8 @@
 set -eu
 
 GKI_ROOT=$(pwd)
+KSU_REPO="${KSU_REPO:-https://github.com/Spring-bulid/MakoSU.git}"
+KSU_SOURCE_DIR="${KSU_SOURCE_DIR:-$GKI_ROOT/MakoSU}"
 
 display_usage() {
     echo "Usage: $0 [--cleanup | <commit-or-tag>]"
@@ -31,16 +33,16 @@ perform_cleanup() {
     [ -L "$DRIVER_DIR/kernelsu" ] && rm "$DRIVER_DIR/kernelsu" && echo "[-] Symlink removed."
     grep -q "kernelsu" "$DRIVER_MAKEFILE" && sed -i '/kernelsu/d' "$DRIVER_MAKEFILE" && echo "[-] Makefile reverted."
     grep -q "drivers/kernelsu/Kconfig" "$DRIVER_KCONFIG" && sed -i '/drivers\/kernelsu\/Kconfig/d' "$DRIVER_KCONFIG" && echo "[-] Kconfig reverted."
-    if [ -d "$GKI_ROOT/KernelSU" ]; then
-        rm -rf "$GKI_ROOT/KernelSU" && echo "[-] KernelSU directory deleted."
+    if [ -d "$KSU_SOURCE_DIR" ]; then
+        rm -rf "$KSU_SOURCE_DIR" && echo "[-] MakoSU source directory deleted."
     fi
 }
 
 # Sets up or update KernelSU environment
 setup_kernelsu() {
     echo "[+] Setting up KernelSU..."
-    test -d "$GKI_ROOT/KernelSU" || git clone https://github.com/SukiSU-Ultra/SukiSU-Ultra KernelSU && echo "[+] Repository cloned."
-    cd "$GKI_ROOT/KernelSU"
+    test -d "$KSU_SOURCE_DIR" || git clone "$KSU_REPO" "$KSU_SOURCE_DIR" && echo "[+] Repository cloned."
+    cd "$KSU_SOURCE_DIR"
     git stash && echo "[-] Stashed current changes."
     if [ "$(git status | grep -Po 'v\d+(\.\d+)*' | head -n1)" ]; then
         git checkout main && echo "[-] Switched to main branch."
@@ -52,7 +54,7 @@ setup_kernelsu() {
         git checkout "$1" && echo "[-] Checked out $1." || echo "[-] Checkout default branch"
     fi
     cd "$DRIVER_DIR"
-    ln -sf "$(realpath --relative-to="$DRIVER_DIR" "$GKI_ROOT/KernelSU/kernel")" "kernelsu" && echo "[+] Symlink created."
+    ln -sf "$(realpath --relative-to="$DRIVER_DIR" "$KSU_SOURCE_DIR/kernel")" "kernelsu" && echo "[+] Symlink created."
 
     # Add entries in Makefile and Kconfig if not already existing
     grep -q "kernelsu" "$DRIVER_MAKEFILE" || printf "\nobj-\$(CONFIG_KSU) += kernelsu/\n" >> "$DRIVER_MAKEFILE" && echo "[+] Modified Makefile."

@@ -1,6 +1,6 @@
-# Integrate
+# Integrate MakoSU
 
-SukiSU can be integrated into both _GKI_ and _non-GKI_ kernels and has been backported to _4.14_.
+MakoSU can be integrated into GKI and non-GKI kernels, but non-GKI support must be adapted per device source tree. There is no universal boot image for vendor kernels.
 
 <!-- It should be 3.4, but backslashxx's syscall manual hook cannot use in SukiSU-->
 
@@ -12,23 +12,21 @@ Prerequisites: open source bootable kernel.
 
 1. **KPROBES hook:**
 
-   - Default hook method on GKI kernels.
-   - Requires `# CONFIG_KSU_MANUAL_HOOK is not set` & `CONFIG_KPROBES=y`
-   - Used for Loadable Kernel Module (LKM).
+   - Default hook path in the current MakoSU kernel tree.
+   - Requires `CONFIG_KPROBES=y` and `CONFIG_EXT4_FS=y`.
+   - Use `CONFIG_KSU=m` for an LKM or `CONFIG_KSU=y` for a built-in integration.
 
-2. **Manual hook:**
+2. **Built-in/source adaptation:**
 
    <!-- - backslashxx's syscall manual hook: https://github.com/backslashxx/KernelSU/issues/5 (v1.5 version is not available at the moment, if you want to use it, please use v1.4 version, or standard KernelSU hooks)-->
 
-   - Requires `CONFIG_KSU_MANUAL_HOOK=y`
-   - Requires [`guide/how-to-integrate.md`](guide/how-to-integrate.md)
-   - Requires [https://github.com/~](https://github.com/tiann/KernelSU/blob/main/website/docs/guide/how-to-integrate-for-non-gki.md#manually-modify-the-kernel-source)
+   - The current MakoSU tree does not define `CONFIG_KSU_MANUAL_HOOK` or `CONFIG_KSU_TRACEPOINT_HOOK`; do not add these obsolete options.
+   - Non-GKI kernels require source integration and vendor-specific adaptation of APIs, symbols, and hook availability.
 
-3. **Tracepoint Hook:**
+3. **Tracepoint capability:**
 
-   - Hook method introduced since SukiSU commit [49b01aad](https://github.com/SukiSU-Ultra/SukiSU-Ultra/commit/49b01aad74bcca6dba5a8a2e053bb54b648eb124)
-   - Requires `CONFIG_KSU_TRACEPOINT_HOOK=y`
-   - Requires [`guide/tracepoint-hook.md`](tracepoint-hook.md)
+   - Availability depends on `CONFIG_TRACEPOINTS`, `CONFIG_HAVE_SYSCALL_TRACEPOINTS`, and the target architecture.
+   - Verify symbols and vendor implementation against the target kernel build.
 
 <!-- This part refer to [rsuntk/KernelSU](https://github.com/rsuntk/KernelSU). -->
 
@@ -39,22 +37,16 @@ If you're able to build a bootable kernel, there are two ways to integrate Kerne
 
 ## Integrate with kprobe
 
-Applicable:
-
-- _GKI_ kernel
-
-Not applicable:
-
-- _non-GKI_ kernel
+Applicable to GKI or non-GKI kernels that provide `CONFIG_KPROBES=y` and the required symbols.
 
 KernelSU uses kprobe to do kernel hooks. If kprobe runs well in your kernel, it's recommended to use it this way.
 
-Please refer to this document [https://github.com/~](https://github.com/tiann/KernelSU/blob/main/website/docs/guide/how-to-integrate-for-non-gki.md#integrate-with-kprobe). Although it is titled “for _non-GKI_,” it only applies to _GKI_.
+If the target kernel lacks the required Kprobes or symbols, use source integration and adapt each hook; do not force-load an LKM based only on the kernel major version.
 
-The execution command for the step that adds KernelSU to your kernel source tree is replaced with:
+From the kernel source tree, run the current MakoSU integration script:
 
 ```sh
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s main
+curl -LSs "https://raw.githubusercontent.com/Spring-bulid/MakoSU/main/kernel/setup.sh" | bash
 ```
 
 ## Manually modify the kernel source
@@ -64,34 +56,18 @@ Applicable:
 - GKI kernel
 - non-GKI kernel
 
-Please refer to this document [https://github.com/~ (Integrate for non-GKI)](https://github.com/tiann/KernelSU/blob/main/website/docs/guide/how-to-integrate-for-non-gki.md#manually-modify-the-kernel-source) and [https://github.com/~ (Build for GKI)](https://kernelsu.org/zh_CN/guide/how-to-build.html) to integrate manually, although first link is titled “for non-GKI,” it also applies to GKI. It can work on them both.
-
-There is another way to integrate but still work in the process.
-
-<!-- It is backslashxx's syscall manual hook, but it cannot be used now. -->
-
-Run command for the step that adds KernelSU(SukiSU) to your kernel source tree is replaced with:
+Prepare a bootable device kernel source tree before running the script. It clones MakoSU by default; override `KSU_REPO` and `KSU_SOURCE_DIR` when needed.
 
 ### GKI kernel
 
 ```sh
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s main
+curl -LSs "https://raw.githubusercontent.com/Spring-bulid/MakoSU/main/kernel/setup.sh" | bash
 ```
 
 ### Built-in kernel
 
 ```sh
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s builtin
+curl -LSs "https://raw.githubusercontent.com/Spring-bulid/MakoSU/main/kernel/setup.sh" | KSU_SOURCE_DIR=/path/to/MakoSU bash
 ```
 
-### GKI / Built-in kernel with susfs (experiment)
-
-```sh
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-{{branch}}
-```
-
-Branch:
-
-- `main` (susfs-main)
-- `test` (susfs-test)
-- version (for example: susfs-1.5.7, you should check the [branches](https://github.com/SukiSU-Ultra/SukiSU-Ultra/branches))
+`CONFIG_KSU=m` is for an LKM that exactly matches the target kernel. `CONFIG_KSU=y` is for built-in non-GKI integration. Both modes require the device's own `.config`, symbols, and toolchain.

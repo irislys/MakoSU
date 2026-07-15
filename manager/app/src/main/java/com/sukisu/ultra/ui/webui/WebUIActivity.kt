@@ -2,6 +2,7 @@ package com.sukisu.ultra.ui.webui
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.Toast
@@ -36,11 +37,13 @@ import top.yukonga.miuix.kmp.basic.InfiniteProgressIndicator
 class WebUIActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        enableEdgeToEdge()
-        window.isNavigationBarContrastEnforced = false
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-
         super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
 
         setContent {
             val context = LocalContext.current
