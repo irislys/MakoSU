@@ -13,3 +13,4 @@ __pycache__
 /manager/makosu-release-cert.der
 .cache/
 .wsl/
+/website/node_modules/

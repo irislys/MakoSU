@@ -1,0 +1,586 @@
+.mako-home {
+  width: 100%;
+  margin: 0;
+  overflow-x: clip;
+  color: #20242b;
+  background: #f7f9f7;
+}
+
+.mako-shell {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.mako-hero {
+  position: relative;
+  display: flex;
+  min-height: calc(100svh - 112px);
+  max-height: 720px;
+  overflow: hidden;
+  background: #edf3ee;
+  border-bottom: 1px solid #dce4de;
+}
+
+.mako-hero-art {
+  position: absolute;
+  top: 50%;
+  right: max(3vw, 24px);
+  width: min(52vw, 690px);
+  height: min(72vh, 690px);
+  object-fit: contain;
+  transform: translateY(-48%);
+}
+
+.mako-hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 72px 0 56px;
+}
+
+.mako-kicker {
+  margin: 0 0 18px;
+  color: #2f7259;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+.mako-hero h1 {
+  margin: 0;
+  color: #1d2229;
+  font-size: 76px;
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.mako-hero-title {
+  max-width: 660px;
+  margin: 22px 0 0;
+  color: #1d2229;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.mako-hero-lead {
+  max-width: 610px;
+  margin: 18px 0 0;
+  color: #535d59;
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+.mako-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.mako-button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none !important;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.mako-button:hover {
+  transform: translateY(-1px);
+}
+
+.mako-button-primary {
+  color: #fff !important;
+  background: #2f7259;
+}
+
+.mako-button-primary:hover {
+  background: #245b46;
+}
+
+.mako-button-secondary {
+  color: #252b31 !important;
+  background: #fff;
+  border-color: #bdc9c0;
+}
+
+.mako-button-secondary:hover {
+  border-color: #73877a;
+}
+
+.mako-facts {
+  display: grid;
+  width: min(650px, 100%);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin: 40px 0 0;
+  padding: 0;
+  border-top: 1px solid #bdc9c0;
+}
+
+.mako-facts > div {
+  min-width: 0;
+  padding: 16px 18px 0 0;
+}
+
+.mako-facts dt {
+  color: #20242b;
+  font-size: 15px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.mako-facts dd {
+  margin: 4px 0 0;
+  color: #65706b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.mako-section {
+  padding: 96px 0;
+}
+
+.mako-section-heading {
+  max-width: 760px;
+  margin-bottom: 42px;
+}
+
+.mako-section-heading-wide {
+  max-width: 900px;
+}
+
+.mako-section h2 {
+  margin: 0;
+  color: inherit;
+  font-size: 40px;
+  font-weight: 760;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.mako-section-heading > p:last-child,
+.mako-split-copy > p:last-of-type,
+.mako-safety-inner p {
+  margin: 18px 0 0;
+  color: #606963;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.mako-feature-section {
+  background: #fff;
+}
+
+.mako-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.mako-feature {
+  min-height: 236px;
+  padding: 26px;
+  background: #f5f7f5;
+  border: 1px solid #e0e6e1;
+  border-radius: 8px;
+}
+
+.mako-feature-index {
+  color: #c05d63;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.mako-feature h3,
+.mako-susfs-list h3 {
+  margin: 28px 0 0;
+  color: #242a31;
+  font-size: 20px;
+  font-weight: 720;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.mako-feature p,
+.mako-susfs-list p {
+  margin: 12px 0 0;
+  color: #626b66;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.mako-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(520px, 1.18fr);
+  gap: 72px;
+  align-items: start;
+}
+
+.mako-split-copy {
+  position: sticky;
+  top: 96px;
+}
+
+.mako-text-link {
+  display: inline-flex;
+  margin-top: 26px;
+  color: #2f7259 !important;
+  font-size: 14px;
+  font-weight: 750;
+  text-decoration: none !important;
+}
+
+.mako-kmi-section {
+  background: #f0f3f0;
+}
+
+.mako-kmi-list {
+  border-top: 2px solid #2c332f;
+}
+
+.mako-kmi-row {
+  display: grid;
+  grid-template-columns: 1fr 90px minmax(180px, 1fr);
+  gap: 18px;
+  align-items: center;
+  min-height: 62px;
+  border-bottom: 1px solid #cfd8d1;
+  font-size: 14px;
+}
+
+.mako-kmi-row strong {
+  color: #c05d63;
+}
+
+.mako-kmi-row code {
+  padding: 0;
+  color: #3b4540;
+  background: transparent;
+  font-size: 13px;
+}
+
+.mako-susfs-section {
+  color: #f2f4f2;
+  background: #242a28;
+}
+
+.mako-susfs-section .mako-kicker {
+  color: #82c7a7;
+}
+
+.mako-susfs-section .mako-split-copy > p:last-of-type,
+.mako-susfs-list p {
+  color: #b8c1bc;
+}
+
+.mako-susfs-list {
+  border-top: 1px solid #57615c;
+}
+
+.mako-susfs-list > div {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 28px;
+  padding: 24px 0;
+  border-bottom: 1px solid #414a45;
+}
+
+.mako-susfs-list h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 17px;
+}
+
+.mako-susfs-list p {
+  margin: 0;
+}
+
+.mako-contract-section {
+  background: #fff;
+}
+
+.mako-contract-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  border-top: 2px solid #2c332f;
+}
+
+.mako-contract-grid > div {
+  min-width: 0;
+  padding: 24px 24px 0 0;
+}
+
+.mako-contract-grid dt {
+  color: #717974;
+  font-size: 13px;
+}
+
+.mako-contract-grid dd {
+  margin: 8px 0 0;
+  color: #22282e;
+  font-family: var(--vp-font-family-mono);
+  font-size: 15px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.mako-safety-section {
+  color: #fff;
+  background: #b9575e;
+}
+
+.mako-safety-section .mako-kicker,
+.mako-safety-inner p {
+  color: #ffe9e7;
+}
+
+.mako-safety-inner {
+  display: flex;
+  gap: 44px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mako-safety-inner > div {
+  max-width: 780px;
+}
+
+.mako-button-light {
+  flex: 0 0 auto;
+  color: #7a3238 !important;
+  background: #fff;
+}
+
+.mako-home-footer {
+  padding: 54px 0 64px;
+  background: #f7f9f7;
+}
+
+.mako-home-footer .mako-shell {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.mako-home-footer img {
+  width: 180px;
+  height: auto;
+}
+
+.mako-home-footer p {
+  max-width: 660px;
+  margin: 0;
+  color: #69716d;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.dark .mako-home {
+  color: #eef2ef;
+  background: #171a19;
+}
+
+.dark .mako-hero {
+  background: #edf3ee;
+  border-color: #dce4de;
+}
+
+.dark .mako-hero-art {
+  opacity: 1;
+}
+
+.dark .mako-feature h3,
+.dark .mako-contract-grid dd {
+  color: #f5f7f5;
+}
+
+.dark .mako-section-heading > p:last-child,
+.dark .mako-split-copy > p:last-of-type,
+.dark .mako-feature p,
+.dark .mako-home-footer p {
+  color: #adb7b1;
+}
+
+.dark .mako-hero h1,
+.dark .mako-hero-title,
+.dark .mako-facts dt {
+  color: #1d2229;
+}
+
+.dark .mako-hero-lead,
+.dark .mako-facts dd {
+  color: #535d59;
+}
+
+.dark .mako-feature-section,
+.dark .mako-contract-section {
+  background: #171a19;
+}
+
+.dark .mako-feature {
+  background: #202522;
+  border-color: #343b37;
+}
+
+.dark .mako-kmi-section {
+  background: #1d211f;
+}
+
+.dark .mako-kmi-list,
+.dark .mako-contract-grid {
+  border-color: #d9dfdb;
+}
+
+.dark .mako-kmi-row {
+  border-color: #3c4540;
+}
+
+.dark .mako-kmi-row code {
+  color: #c8d0cb;
+}
+
+.dark .mako-home-footer {
+  background: #171a19;
+}
+
+@media (max-width: 960px) {
+  .mako-hero-art {
+    right: -10%;
+    width: 64vw;
+    opacity: 0.32;
+  }
+
+  .mako-feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mako-split {
+    grid-template-columns: 1fr;
+    gap: 44px;
+  }
+
+  .mako-split-copy {
+    position: static;
+  }
+
+  .mako-contract-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .mako-shell {
+    width: min(100% - 32px, 1180px);
+  }
+
+  .mako-hero {
+    min-height: calc(100svh - 96px);
+    max-height: none;
+  }
+
+  .mako-hero-art {
+    top: auto;
+    right: -18%;
+    bottom: -6%;
+    width: 108vw;
+    height: 62vh;
+    opacity: 0.16;
+    transform: none;
+  }
+
+  .mako-hero-content {
+    padding: 54px 0 38px;
+  }
+
+  .mako-hero h1 {
+    font-size: 54px;
+  }
+
+  .mako-hero-title {
+    font-size: 25px;
+  }
+
+  .mako-hero-lead {
+    font-size: 15px;
+  }
+
+  .mako-actions,
+  .mako-button {
+    width: 100%;
+  }
+
+  .mako-section {
+    padding: 72px 0;
+  }
+
+  .mako-section h2 {
+    font-size: 31px;
+  }
+
+  .mako-feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mako-feature {
+    min-height: 0;
+  }
+
+  .mako-kmi-row {
+    grid-template-columns: 1fr 58px;
+    gap: 12px;
+    padding: 14px 0;
+  }
+
+  .mako-kmi-row code {
+    grid-column: 1 / -1;
+  }
+
+  .mako-susfs-list > div {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .mako-contract-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .mako-contract-grid > div {
+    padding: 18px 0;
+    border-bottom: 1px solid #d5ddd7;
+  }
+
+  .mako-safety-inner,
+  .mako-home-footer .mako-shell {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mako-button-light {
+    width: 100%;
+  }
+
+  .mako-home-footer img {
+    width: min(220px, 70vw);
+  }
+}

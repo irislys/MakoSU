@@ -1,5 +1,6 @@
 @import './custom-block.css';
 @import './doc-fade-in.css';
+@import './home.css';
 
 :root:where(:lang(fa)) {
   --vp-font-family-base:
@@ -8,38 +9,38 @@
 }
 
 :root {
-  --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #bd34fe 30%, #41d1ff);
-  --vp-home-hero-image-background-image: linear-gradient(-45deg, #bd34fe 50%, #47caff 50%);
-  --vp-home-hero-image-filter: blur(44px);
+  --vp-home-hero-name-color: #1f252c;
+  --vp-home-hero-name-background: none;
+  --vp-home-hero-image-background-image: none;
+  --vp-home-hero-image-filter: none;
 
-  /* Enhanced brand color for better contrast */
-  --vp-c-brand-1: #1e40af;
-  --vp-c-brand-2: #2563eb;
-  --vp-c-brand-3: #3b82f6;
-  --vp-c-brand-soft: rgba(30, 64, 175, 0.14);
+  /* MakoSU documentation colors */
+  --vp-c-brand-1: #2f7259;
+  --vp-c-brand-2: #28634d;
+  --vp-c-brand-3: #245b46;
+  --vp-c-brand-soft: rgba(47, 114, 89, 0.14);
 
   /* Button contrast improvements */
-  --vp-button-brand-bg: #1e40af;
+  --vp-button-brand-bg: #2f7259;
   --vp-button-brand-text: #ffffff;
-  --vp-button-brand-hover-bg: #1d4ed8;
+  --vp-button-brand-hover-bg: #245b46;
   --vp-button-brand-hover-text: #ffffff;
-  --vp-button-brand-active-bg: #1e3a8a;
+  --vp-button-brand-active-bg: #1c4938;
   --vp-button-brand-active-text: #ffffff;
 }
 
 /* Dark mode color overrides for better contrast */
 .dark:root {
-  --vp-c-brand-1: #60a5fa;
-  --vp-c-brand-2: #3b82f6;
-  --vp-c-brand-3: #2563eb;
-  --vp-c-brand-soft: rgba(96, 165, 250, 0.16);
+  --vp-c-brand-1: #78c7a4;
+  --vp-c-brand-2: #64b790;
+  --vp-c-brand-3: #4f9f79;
+  --vp-c-brand-soft: rgba(120, 199, 164, 0.16);
 
-  --vp-button-brand-bg: #3b82f6;
+  --vp-button-brand-bg: #78c7a4;
   --vp-button-brand-text: #000000;
-  --vp-button-brand-hover-bg: #60a5fa;
+  --vp-button-brand-hover-bg: #91d7b9;
   --vp-button-brand-hover-text: #000000;
-  --vp-button-brand-active-bg: #2563eb;
+  --vp-button-brand-active-bg: #64b790;
   --vp-button-brand-active-text: #000000;
 }
 
@@ -79,7 +80,7 @@ img[src='/search.png'] {
   background-color: var(--vp-button-brand-hover-bg) !important;
   color: var(--vp-button-brand-hover-text) !important;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.4);
+  box-shadow: 0 4px 12px rgba(47, 114, 89, 0.32);
 }
 
 .VPButton.brand:active {
@@ -90,18 +91,18 @@ img[src='/search.png'] {
 
 /* Dark mode support for buttons */
 .dark .VPButton.brand {
-  background-color: #3b82f6 !important;
+  background-color: #78c7a4 !important;
   color: #000000 !important;
 }
 
 .dark .VPButton.brand:hover {
-  background-color: #60a5fa !important;
+  background-color: #91d7b9 !important;
   color: #000000 !important;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4px 12px rgba(120, 199, 164, 0.32);
 }
 
 .dark .VPButton.brand:active {
-  background-color: #2563eb !important;
+  background-color: #64b790 !important;
   color: #000000 !important;
 }
 
@@ -129,8 +130,17 @@ img[src='/search.png'] {
 body {
   font-family: 'HarmonyOS Sans SC', sans-serif;
   line-height: 1.8;
-  letter-spacing: 0.05em;
-  word-spacing: 0.05em;
+  letter-spacing: 0;
+  word-spacing: normal;
+}
+
+.VPHome .vp-doc.container,
+.VPHome .vp-doc.container > div,
+.VPHome .vp-doc.container > div > div {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 p,

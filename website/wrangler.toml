@@ -1,11 +1,11 @@
-# Cloudflare Pages Configuration for SukiSU-Ultra
-name = "sukisu-ultra-docs"
+# Cloudflare Pages Configuration for MakoSU
+name = "makosu-site"
 compatibility_date = "2025-08-04"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "docs/.vitepress/dist"
 
 [env.production]
-name = "sukisu-ultra-docs"
+name = "makosu-site"
 
 [env.preview]
-name = "sukisu-ultra-docs-preview"
+name = "makosu-site-preview"

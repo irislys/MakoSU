@@ -1,20 +1,20 @@
 /// <reference lib="webworker" />
 
-const CACHE_NAME: string = 'sukisu-ultra-v2.0'
-const STATIC_CACHE: string = 'sukisu-static-v2.0'
-const RUNTIME_CACHE: string = 'sukisu-runtime-v2.0'
-const IMAGE_CACHE: string = 'sukisu-images-v2.0'
+const CACHE_NAME: string = 'makosu-v1.1'
+const STATIC_CACHE: string = 'makosu-static-v1.1'
+const RUNTIME_CACHE: string = 'makosu-runtime-v1.1'
+const IMAGE_CACHE: string = 'makosu-images-v1.1'
 
 const CRITICAL_ASSETS: string[] = [
-  '/',
-  '/guide/',
-  '/guide/installation',
-  '/guide/compatibility',
-  '/zh/',
-  '/zh/guide/',
-  '/logo.svg',
-  '/favicon.ico',
-  '/offline.html',
+  '/MakoSU/',
+  '/MakoSU/guide/',
+  '/MakoSU/guide/installation',
+  '/MakoSU/guide/compatibility',
+  '/MakoSU/guide/susfs',
+  '/MakoSU/guide/troubleshooting',
+  '/MakoSU/makosu-manager.png',
+  '/MakoSU/favicon-96x96.png',
+  '/MakoSU/offline.html',
 ]
 
 const CACHE_STRATEGIES: {
@@ -139,7 +139,7 @@ async function handleDocument(request: Request): Promise<Response> {
     if (cached) return cached
 
     if (request.mode === 'navigate') {
-      const offlinePage: Response | undefined = await caches.match('/offline.html')
+      const offlinePage: Response | undefined = await caches.match('/MakoSU/offline.html')
       if (offlinePage) return offlinePage
     }
 
@@ -167,7 +167,7 @@ async function handleOffline(request: Request): Promise<Response> {
   const cache: Cache = await caches.open(STATIC_CACHE)
 
   if (request.mode === 'navigate') {
-    const offlinePage: Response | undefined = await caches.match('/offline.html')
+    const offlinePage: Response | undefined = await caches.match('/MakoSU/offline.html')
     if (offlinePage) return offlinePage
   }
 

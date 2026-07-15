@@ -2,10 +2,11 @@
 import DefaultTheme from 'vitepress/theme'
 import { NolebaseGitChangelogPlugin } from '@nolebase/vitepress-plugin-git-changelog/client'
 import 'virtual:group-icons.css'
-import { h, onMounted } from 'vue'
+import { h } from 'vue'
 import './style/style.css'
 import ArticleShare from './components/ArticleShare.vue'
 import backtotop from './components/backtotop.vue'
+import MakoHome from './components/MakoHome.vue'
 import '@nolebase/vitepress-plugin-git-changelog/client/style.css'
 
 export default {
@@ -18,16 +19,6 @@ export default {
   },
   enhanceApp({ app }) {
     app.use(NolebaseGitChangelogPlugin)
-
-    // Register service worker in production for offline support and caching
-    if (
-      typeof window !== 'undefined' &&
-      'serviceWorker' in navigator &&
-      (import.meta as any).env?.PROD
-    ) {
-      onMounted(() => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {})
-      })
-    }
+    app.component('MakoHome', MakoHome)
   },
 }
