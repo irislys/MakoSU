@@ -26,6 +26,7 @@ data class HomeUiState(
     val moduleCount: Int,
     val systemInfo: SystemInfo,
     val showFullStatus: Boolean = true,
+    val homeLayout: HomeLayout = HomeLayout.Standard,
 ) {
     val isSELinuxPermissive: Boolean
         get() = systemInfo.selinuxStatus == "Permissive"
@@ -49,7 +50,7 @@ data class HomeUiState(
         get() = isManager && !isManagerPrBuild && isKernelPrBuild
 
     val showVersionMismatchWarning: Boolean
-        get() = ksuVersion != null && ksuVersion.toLong() != currentManagerVersionCode
+        get() = ksuVersion != null && ksuVersion.toLong() > currentManagerVersionCode
 
     val hasUpdate: Boolean
         get() = latestVersionInfo.versionCode > currentManagerVersionCode

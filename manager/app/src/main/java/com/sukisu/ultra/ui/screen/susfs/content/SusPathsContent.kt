@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import com.sukisu.ultra.ui.LocalUiMode
 import com.sukisu.ultra.ui.UiMode
 import com.sukisu.ultra.ui.screen.susfs.content.miuix.SusPathsContentMiuix
-import com.sukisu.ultra.ui.screen.susfs.content.material.SusPathsContentMaterial
 
 @Composable
 fun SusPathsContent(
@@ -17,8 +16,7 @@ fun SusPathsContent(
     forceRefreshApps: Boolean = false,
     onReset: (() -> Unit)? = null
 ) {
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> SusPathsContentMiuix(
+    SusPathsContentMiuix(
             susPaths = susPaths,
             isLoading = isLoading,
             onAddPath = onAddPath,
@@ -28,14 +26,4 @@ fun SusPathsContent(
             forceRefreshApps = forceRefreshApps,
             onReset = onReset
         )
-        UiMode.Material -> SusPathsContentMaterial(
-            susPaths = susPaths,
-            isLoading = isLoading,
-            onAddPath = onAddPath,
-            onAddAppPath = onAddAppPath,
-            onRemovePath = onRemovePath,
-            onEditPath = { onEditPath?.invoke(it) },
-            onReset = { onReset?.invoke() }
-        )
-    }
 }

@@ -110,14 +110,8 @@ fun ToolsScreen() {
         selinuxLoading = selinuxLoading
     )
 
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> ToolsMiuix(
+    ToolsMiuix(
             state = state,
             actions = actions
         )
-        UiMode.Material -> ToolsMaterial(
-            state = state,
-            actions = actions
-        )
-    }
 }

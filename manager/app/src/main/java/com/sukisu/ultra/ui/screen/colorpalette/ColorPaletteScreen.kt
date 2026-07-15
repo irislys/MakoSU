@@ -60,8 +60,5 @@ fun ColorPaletteScreen() {
         onSetShowFullStatus = viewModel::setShowFullStatus,
     )
 
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> ColorPaletteScreenMiuix(state, actions)
-        UiMode.Material -> ColorPaletteScreenMaterial(state, actions)
-    }
+    ColorPaletteScreenMiuix(state, actions)
 }

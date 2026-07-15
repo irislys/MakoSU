@@ -79,13 +79,9 @@ fun ColorSpec.SpecVersion.effectiveFor(style: PaletteStyle): ColorSpec.SpecVersi
 
 object ThemeController {
     fun getAppSettings(repo: SettingsRepository = SettingsRepositoryImpl()): AppSettings {
-        val uiMode = repo.uiMode
-        var colorModeValue = repo.themeMode
-
-        if (uiMode == "miuix") {
-            val miuixMonet = repo.miuixMonet
-            colorModeValue = ColorMode.fromValue(colorModeValue).forMiuix(miuixMonet).value
-        }
+        val colorModeValue = ColorMode.fromValue(repo.themeMode)
+            .forMiuix(repo.miuixMonet)
+            .value
 
         val colorMode = ColorMode.fromValue(colorModeValue)
         val keyColor = repo.keyColor
@@ -112,18 +108,10 @@ fun KernelSUTheme(
     uiMode: UiMode = LocalUiMode.current,
     content: @Composable () -> Unit
 ) {
-
-    when (uiMode) {
-        UiMode.Miuix -> MiuixKernelSUTheme(
-            appSettings = appSettings,
-            content = content
-        )
-
-        UiMode.Material -> MaterialKernelSUTheme(
-            appSettings = appSettings,
-            content = content
-        )
-    }
+    MiuixKernelSUTheme(
+        appSettings = appSettings,
+        content = content
+    )
 }
 
 @Composable

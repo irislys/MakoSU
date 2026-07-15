@@ -215,8 +215,10 @@
     <string name="settings_monet">Enable Monet</string>
     <string name="settings_key_color">Key color</string>
     <string name="settings_key_color_default">Default</string>
-    <string name="settings_ui_mode">UI Style</string>
-    <string name="settings_ui_mode_summary">Choose the interface style</string>
+    <string name="settings_home_layout">Home layout</string>
+    <string name="settings_home_layout_summary">Switch the home screen layout</string>
+    <string name="settings_home_layout_standard">Miuix</string>
+    <string name="settings_home_layout_miuix_mode">MIUIXMode</string>
     <string name="settings_page_scale">Page Scale</string>
     <string name="settings_page_scale_summary">Adjust the global display scale</string>
     <string name="settings_color_spec">Color Spec</string>
@@ -242,6 +244,11 @@
     <string name="tab_releases">Releases</string>
     <string name="tab_info">Info</string>
     <string name="module_shortcut_title">Create shortcut</string>
+    <string name="module_banner_title">%1$s banner</string>
+    <string name="module_banner_summary">Long press a system module card to change its local banner image.</string>
+    <string name="module_banner_choose">Choose banner image</string>
+    <string name="module_banner_remove">Remove custom banner</string>
+    <string name="module_banner_save_failed">Unable to save the selected banner image</string>
     <string name="module_shortcut_name_label">Shortcut name</string>
     <string name="module_shortcut_icon_pick">Choose custom icon</string>
     <string name="module_shortcut_not_supported">Launcher does not support desktop shortcuts</string>

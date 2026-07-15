@@ -188,8 +188,6 @@
     <string name="settings_monet">啟用 Monet 顏色</string>
     <string name="settings_key_color">強調色</string>
     <string name="settings_key_color_default">默認</string>
-    <string name="settings_ui_mode">界面風格</string>
-    <string name="settings_ui_mode_summary">選擇應用的界面風格</string>
     <string name="settings_page_scale">界面縮放</string>
     <string name="settings_page_scale_summary">調整全局顯示比例</string>
     <string name="settings_color_spec">色彩標準</string>

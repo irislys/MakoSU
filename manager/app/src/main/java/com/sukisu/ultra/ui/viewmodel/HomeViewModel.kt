@@ -1,6 +1,7 @@
 package com.sukisu.ultra.ui.viewmodel
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import android.system.Os
 import androidx.lifecycle.ViewModel
@@ -19,6 +20,7 @@ import com.sukisu.ultra.data.repository.SettingsRepositoryImpl
 import com.sukisu.ultra.getKernelVersion
 import com.sukisu.ultra.ksuApp
 import com.sukisu.ultra.ui.screen.home.HomeUiState
+import com.sukisu.ultra.ui.screen.home.HomeLayout
 import com.sukisu.ultra.ui.screen.home.SystemInfo
 import com.sukisu.ultra.ui.screen.home.getManagerVersion
 import com.sukisu.ultra.ui.util.checkNewVersion
@@ -33,8 +35,24 @@ class HomeViewModel(
     private val settingsRepo: SettingsRepository = SettingsRepositoryImpl()
 ) : ViewModel() {
 
+    private val preferences = ksuApp.getSharedPreferences("settings", Context.MODE_PRIVATE)
     private val _uiState = MutableStateFlow(buildState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+    private val preferenceListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == "home_layout") {
+            _uiState.update {
+                it.copy(homeLayout = HomeLayout.fromValue(settingsRepo.homeLayout))
+            }
+        }
+    }
+
+    init {
+        preferences.registerOnSharedPreferenceChangeListener(preferenceListener)
+    }
+
+    override fun onCleared() {
+        preferences.unregisterOnSharedPreferenceChangeListener(preferenceListener)
+    }
 
     fun refresh() {
         viewModelScope.launch {
@@ -73,8 +91,8 @@ class HomeViewModel(
             isSafeMode = Natives.isSafeMode,
             isLateLoadMode = Natives.isLateLoadMode,
             checkUpdateEnabled = settingsRepo.checkUpdate,
-            showFullStatus = ksuApp.getSharedPreferences("settings", Context.MODE_PRIVATE)
-                .getBoolean("show_fingerprint", true),
+            showFullStatus = preferences.getBoolean("show_fingerprint", true),
+            homeLayout = HomeLayout.fromValue(settingsRepo.homeLayout),
             latestVersionInfo = LatestVersionInfo(),
             currentManagerVersionCode = managerVersion.versionCode,
             superuserCount = getSuperuserCount(),

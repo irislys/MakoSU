@@ -6,8 +6,5 @@ import com.sukisu.ultra.ui.UiMode
 
 @Composable
 fun SuSFSScreen() {
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> SuSFSMiuix()
-        UiMode.Material -> SuSFSMaterial()
-    }
+    SuSFSMiuix()
 }

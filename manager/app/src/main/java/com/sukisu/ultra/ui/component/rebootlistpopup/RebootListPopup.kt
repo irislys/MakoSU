@@ -37,8 +37,5 @@ fun getRebootListOption(): List<RebootListOption> {
 
 @Composable
 fun RebootListPopup() {
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> RebootListPopupMiuix()
-        UiMode.Material -> RebootListPopupMaterial()
-    }
+    RebootListPopupMiuix()
 }

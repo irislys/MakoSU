@@ -61,17 +61,9 @@ fun SuperUserPager(
         onOpenProfile = onOpenProfile,
     )
 
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> SuperUserPagerMiuix(
+    SuperUserPagerMiuix(
             uiState = uiState,
             actions = actions,
             bottomInnerPadding = bottomInnerPadding,
         )
-
-        UiMode.Material -> SuperUserPagerMaterial(
-            uiState = uiState,
-            actions = actions,
-            bottomInnerPadding = bottomInnerPadding,
-        )
-    }
 }

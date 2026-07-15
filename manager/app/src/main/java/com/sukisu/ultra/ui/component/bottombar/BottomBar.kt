@@ -90,10 +90,7 @@ fun BottomBar(
     backdrop: Backdrop,
     modifier: Modifier = Modifier,
 ) {
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> BottomBarMiuix(blurBackdrop, backdrop, modifier)
-        UiMode.Material -> BottomBarMaterial()
-    }
+    BottomBarMiuix(blurBackdrop, backdrop, modifier)
 }
 
 @Composable
@@ -101,8 +98,5 @@ fun SideRail(
     blurBackdrop: LayerBackdrop?,
     modifier: Modifier = Modifier,
 ) {
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> NavigationRailMiuix(blurBackdrop, modifier)
-        UiMode.Material -> NavigationRailMaterial(modifier)
-    }
+    NavigationRailMiuix(blurBackdrop, modifier)
 }

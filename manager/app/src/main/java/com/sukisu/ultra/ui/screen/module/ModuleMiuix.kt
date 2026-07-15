@@ -43,6 +43,7 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.offset
@@ -80,6 +81,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -87,6 +89,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.FixedScale
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalContext
@@ -207,11 +210,29 @@ fun ModulePagerMiuix(
 
     val shortcutState = rememberModuleShortcutState(context)
     val showShortcutDialog = remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    var bannerModule by remember { mutableStateOf<Module?>(null) }
+    var bannerRevision by remember { mutableIntStateOf(0) }
 
     val pickShortcutIconLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
         shortcutState.updateIconUri(uri?.toString())
+    }
+
+    val pickBannerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        val module = bannerModule
+        if (uri != null && module != null) {
+            scope.launch {
+                if (ModuleBannerStore.save(context, module.id, uri)) {
+                    bannerRevision++
+                } else {
+                    Toast.makeText(context, R.string.module_banner_save_failed, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     LaunchedEffect(confirmDialogState) {
@@ -227,7 +248,6 @@ fun ModulePagerMiuix(
         }
     }
 
-    val scope = rememberCoroutineScope()
     val snackbarJob = remember { mutableStateOf<Job?>(null) }
     ObserveAsEvents(moduleEvent) { event ->
         when (event) {
@@ -472,6 +492,8 @@ fun ModulePagerMiuix(
                     updateInfoMap = uiState.updateInfo,
                     actions = actions,
                     onModuleAddShortcut = ::onModuleAddShortcut,
+                    onManageBanner = { bannerModule = it },
+                    bannerRevision = bannerRevision,
                     contentPadding = PaddingValues(
                         top = 6.dp,
                         start = 0.dp,
@@ -582,6 +604,8 @@ fun ModulePagerMiuix(
                                 onModuleAddShortcut = { module, type ->
                                     onModuleAddShortcut(module, type)
                                 },
+                                onManageBanner = { bannerModule = it },
+                                bannerRevision = bannerRevision,
                                 contentPadding = contentPadding,
                                 listState = listState,
                             )
@@ -603,6 +627,17 @@ fun ModulePagerMiuix(
         onConfirmShortcut = {
             shortcutState.createShortcut(context)
             showShortcutDialog.value = false
+        },
+    )
+    ModuleBannerDialog(
+        module = bannerModule,
+        revision = bannerRevision,
+        onDismissRequest = { bannerModule = null },
+        onPickBanner = { pickBannerLauncher.launch("image/*") },
+        onRemoveBanner = { module ->
+            if (ModuleBannerStore.remove(context, module.id)) {
+                bannerRevision++
+            }
         },
     )
 }
@@ -730,12 +765,61 @@ private fun ModuleShortcutDialog(
 }
 
 @Composable
+private fun ModuleBannerDialog(
+    module: Module?,
+    revision: Int,
+    onDismissRequest: () -> Unit,
+    onPickBanner: () -> Unit,
+    onRemoveBanner: (Module) -> Unit,
+) {
+    val context = LocalContext.current
+    val currentModule = module ?: return
+    val hasBanner = remember(currentModule.id, revision) {
+        ModuleBannerStore.has(context, currentModule.id)
+    }
+
+    OverlayDialog(
+        show = true,
+        title = stringResource(R.string.module_banner_title, currentModule.name),
+        onDismissRequest = onDismissRequest,
+        content = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(
+                    text = stringResource(R.string.module_banner_summary),
+                    color = colorScheme.onSurfaceVariantSummary,
+                    fontSize = 14.sp,
+                )
+                TextButton(
+                    text = stringResource(R.string.module_banner_choose),
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onPickBanner,
+                )
+                if (hasBanner) {
+                    TextButton(
+                        text = stringResource(R.string.module_banner_remove),
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { onRemoveBanner(currentModule) },
+                    )
+                }
+                TextButton(
+                    text = stringResource(android.R.string.cancel),
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onDismissRequest,
+                )
+            }
+        },
+    )
+}
+
+@Composable
 private fun ModuleList(
     modifier: Modifier = Modifier,
     modules: List<Module>,
     updateInfoMap: Map<String, ModuleUpdateInfo>,
     actions: ModuleActions,
     onModuleAddShortcut: (Module, ShortcutType) -> Unit,
+    onManageBanner: (Module) -> Unit,
+    bannerRevision: Int,
     contentPadding: PaddingValues,
     listState: LazyListState = rememberLazyListState(),
 ) {
@@ -786,6 +870,8 @@ private fun ModuleList(
                     onAddActionShortcut = { type: ShortcutType ->
                         onModuleAddShortcut(currentModuleState.value, type)
                     },
+                    onManageBanner = { onManageBanner(currentModuleState.value) },
+                    bannerRevision = bannerRevision,
                     onOpenWebUi = {
                         if (module.hasWebUi) {
                             actions.onOpenWebUi(module)
@@ -810,6 +896,8 @@ fun ModuleItem(
     onUpdate: () -> Unit,
     onExecuteAction: () -> Unit,
     onAddActionShortcut: (ShortcutType) -> Unit,
+    onManageBanner: () -> Unit,
+    bannerRevision: Int,
     onOpenWebUi: () -> Unit
 ) {
     val secondaryContainer = colorScheme.secondaryContainer.copy(alpha = 0.8f)
@@ -820,16 +908,59 @@ fun ModuleItem(
     val textDecoration = if (module.remove) TextDecoration.LineThrough else null
     val hasDescription = module.description.isNotBlank()
     var expanded by rememberSaveable(module.id) { mutableStateOf(false) }
+    val banner = rememberModuleBanner(module.id, bannerRevision)
 
     Card(
         modifier = Modifier
             .padding(horizontal = 12.dp)
-            .padding(bottom = 12.dp),
+            .padding(bottom = 12.dp)
+            .combinedClickable(
+                onClick = {
+                    if (hasDescription) expanded = !expanded
+                },
+                onLongClick = onManageBanner,
+            ),
         insideMargin = PaddingValues(16.dp),
-        onClick = {
-            if (hasDescription) expanded = !expanded
-        }
+        onClick = {},
+        showIndication = false,
     ) {
+        if (banner != null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(116.dp)
+                    .clip(RoundedCornerShape(14.dp)),
+            ) {
+                Image(
+                    bitmap = banner,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            Brush.verticalGradient(
+                                0f to Color.Transparent,
+                                1f to Color.Black.copy(alpha = 0.72f),
+                            )
+                        ),
+                )
+                Text(
+                    text = module.name,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(12.dp),
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight(600),
+                    color = Color.White,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            Spacer(Modifier.height(10.dp))
+        }
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,

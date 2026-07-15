@@ -12,42 +12,26 @@ fun rememberAnyKernel3State(
     preselectedKernelUri: String?,
     horizonKernelSummary: String,
     isAbDevice: Boolean
-) = when (LocalUiMode.current) {
-    UiMode.Miuix -> rememberAnyKernel3StateMiuix(
-        installMethodState = installMethodState,
-        preselectedKernelUri = preselectedKernelUri,
-        horizonKernelSummary = horizonKernelSummary,
-        isAbDevice = isAbDevice
-    )
-    UiMode.Material -> rememberAnyKernel3StateMaterial(
-        installMethodState = installMethodState,
-        preselectedKernelUri = preselectedKernelUri,
-        horizonKernelSummary = horizonKernelSummary,
-        isAbDevice = isAbDevice
-    )
-}
+) = rememberAnyKernel3StateMiuix(
+    installMethodState = installMethodState,
+    preselectedKernelUri = preselectedKernelUri,
+    horizonKernelSummary = horizonKernelSummary,
+    isAbDevice = isAbDevice,
+)
 
 @Composable
 fun KpmPatchSelectionDialog(
     show: Boolean,
     currentOption: KpmPatchOption,
     onDismiss: () -> Unit,
-    onOptionSelected: (KpmPatchOption) -> Unit
+    onOptionSelected: (KpmPatchOption) -> Unit,
 ) {
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> KpmPatchSelectionDialogMiuix(
-            show = show,
-            currentOption = currentOption,
-            onDismiss = onDismiss,
-            onOptionSelected = onOptionSelected
-        )
-        UiMode.Material -> KpmPatchSelectionDialogMaterial(
-            show = show,
-            currentOption = currentOption,
-            onDismiss = onDismiss,
-            onOptionSelected = onOptionSelected
-        )
-    }
+    KpmPatchSelectionDialogMiuix(
+        show = show,
+        currentOption = currentOption,
+        onDismiss = onDismiss,
+        onOptionSelected = onOptionSelected,
+    )
 }
 
 

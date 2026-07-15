@@ -161,18 +161,11 @@ fun KpmScreen(
         },
     )
 
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> KpmMiuix(
+    KpmMiuix(
             viewModel = viewModel,
             actions = actions,
             bottomInnerPadding = bottomInnerPadding
         )
-        UiMode.Material -> KpmMaterial(
-            viewModel = viewModel,
-            actions = actions,
-            bottomInnerPadding = bottomInnerPadding
-        )
-    }
 }
 
 private suspend fun handleModuleInstall(

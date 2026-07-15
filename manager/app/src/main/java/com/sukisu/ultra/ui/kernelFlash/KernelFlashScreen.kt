@@ -132,21 +132,11 @@ fun KernelFlashScreen(
         }
     )
 
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> KernelFlashMiuix(
+    KernelFlashMiuix(
             state = flashState,
             actions = actions,
             logText = logText,
             kpmPatchEnabled = kpmPatchEnabled,
             kpmUndoPatch = kpmUndoPatch
         )
-
-        UiMode.Material -> KernelFlashMaterial(
-            state = flashState,
-            actions = actions,
-            logText = logText,
-            kpmPatchEnabled = kpmPatchEnabled,
-            kpmUndoPatch = kpmUndoPatch
-        )
-    }
 }

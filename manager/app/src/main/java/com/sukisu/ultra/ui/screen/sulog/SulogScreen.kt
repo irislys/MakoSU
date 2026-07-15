@@ -56,10 +56,7 @@ fun SulogScreen() {
         onSelectFile = viewModel::refresh,
     )
 
-    when (uiMode) {
-        UiMode.Material -> SulogScreenMaterial(state, actions)
-        UiMode.Miuix -> SulogScreenMiuix(state, actions)
-    }
+    SulogScreenMiuix(state, actions)
 }
 
 @Composable

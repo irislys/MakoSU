@@ -201,8 +201,6 @@
     <string name="settings_monet">Включить Monet</string>
     <string name="settings_key_color">Ключевой цвет</string>
     <string name="settings_key_color_default">По умолчанию</string>
-    <string name="settings_ui_mode">Стиль UI</string>
-    <string name="settings_ui_mode_summary">Выберите стиль UI</string>
     <string name="settings_page_scale">Масштаб страницы</string>
     <string name="settings_page_scale_summary">Задайте глобальный масштаб дисплея</string>
     <string name="settings_color_spec">Спецификация цвета</string>

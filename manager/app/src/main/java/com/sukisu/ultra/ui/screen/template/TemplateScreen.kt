@@ -2,7 +2,6 @@ package com.sukisu.ultra.ui.screen.template
 
 import android.content.ClipData
 import android.widget.Toast
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,8 +16,6 @@ import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import com.sukisu.ultra.R
-import com.sukisu.ultra.ui.LocalUiMode
-import com.sukisu.ultra.ui.UiMode
 import com.sukisu.ultra.ui.navigation3.LocalNavigator
 import com.sukisu.ultra.ui.navigation3.Route
 import com.sukisu.ultra.ui.util.isNetworkAvailable
@@ -26,7 +23,6 @@ import com.sukisu.ultra.ui.viewmodel.TemplateViewModel
 
 @Composable
 fun AppProfileTemplateScreen() {
-    val uiMode = LocalUiMode.current
     val navigator = LocalNavigator.current
     val viewModel = viewModel<TemplateViewModel>()
     val screenState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -34,7 +30,6 @@ fun AppProfileTemplateScreen() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val requestKey = "template_edit"
-    val snackBarHost = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         if (screenState.templateList.isEmpty()) {
@@ -45,9 +40,7 @@ fun AppProfileTemplateScreen() {
     LaunchedEffect(Unit) {
         navigator.observeResult<Boolean>(requestKey).collect { success ->
             if (success) {
-                if (uiMode == UiMode.Miuix) {
-                    navigator.clearResult(requestKey)
-                }
+                navigator.clearResult(requestKey)
                 viewModel.fetchTemplates()
             }
         }
@@ -59,11 +52,7 @@ fun AppProfileTemplateScreen() {
 
     fun showMessage(message: String) {
         scope.launch {
-            if (uiMode == UiMode.Material) {
-                snackBarHost.showSnackbar(message)
-            } else {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -108,41 +97,21 @@ fun AppProfileTemplateScreen() {
             }
         },
         onCreateTemplate = {
-            when (uiMode) {
-                UiMode.Miuix -> navigator.navigateForResult(
+            navigator.navigateForResult(
                     Route.TemplateEditor(TemplateViewModel.TemplateInfo(), false),
                     requestKey,
                 )
-
-                UiMode.Material -> navigator.push(
-                    Route.TemplateEditor(TemplateViewModel.TemplateInfo(), false)
-                )
-            }
         },
         onOpenTemplate = { template ->
-            when (uiMode) {
-                UiMode.Miuix -> navigator.navigateForResult(
+            navigator.navigateForResult(
                     Route.TemplateEditor(template, !template.local),
                     requestKey,
                 )
-
-                UiMode.Material -> navigator.push(
-                    Route.TemplateEditor(template, !template.local)
-                )
-            }
         },
     )
 
-    when (uiMode) {
-        UiMode.Miuix -> AppProfileTemplateScreenMiuix(
+    AppProfileTemplateScreenMiuix(
             state = uiState,
             actions = actions,
         )
-
-        UiMode.Material -> AppProfileTemplateScreenMaterial(
-            state = uiState,
-            actions = actions,
-            snackBarHost = snackBarHost,
-        )
-    }
 }

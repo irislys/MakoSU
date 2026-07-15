@@ -3,14 +3,11 @@ package com.sukisu.ultra.ui
 import androidx.compose.runtime.staticCompositionLocalOf
 
 enum class UiMode(val value: String) {
-    Miuix("miuix"),
-    Material("material");
+    Miuix("miuix");
 
     companion object {
-        fun fromValue(value: String): UiMode = when (value) {
-            Material.value -> Material
-            else -> Miuix
-        }
+        // MakoSU now ships a single Miuix interface. Ignore legacy saved values.
+        fun fromValue(value: String): UiMode = Miuix
 
         val DEFAULT_VALUE = Miuix.value
     }

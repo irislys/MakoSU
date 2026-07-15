@@ -145,14 +145,8 @@ fun UmountManagerScreen() {
         showAddDialog = showAddDialog
     )
 
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> UmountManagerMiuix(
+    UmountManagerMiuix(
             state = state,
             actions = actions
         )
-        UiMode.Material -> UmountManagerMaterial(
-            state = state,
-            actions = actions
-        )
-    }
 }

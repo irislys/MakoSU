@@ -11,7 +11,7 @@ import com.topjohnwu.superuser.ShellUtils
 import com.sukisu.ultra.Natives
 import com.sukisu.ultra.ksuApp
 import com.sukisu.ultra.magica.BootCompletedReceiver
-import com.sukisu.ultra.ui.UiMode
+import com.sukisu.ultra.ui.screen.home.HomeLayout
 import com.sukisu.ultra.ui.screen.modulerepo.RepoSort
 import com.sukisu.ultra.ui.util.execKsud
 import com.sukisu.ultra.ui.util.getFeaturePersistValue
@@ -29,9 +29,9 @@ class SettingsRepositoryImpl : SettingsRepository {
         ksuApp.getSharedPreferences("settings", Context.MODE_PRIVATE)
     }
 
-    override var uiMode: String
-        get() = prefs.getString("ui_mode", UiMode.DEFAULT_VALUE) ?: UiMode.DEFAULT_VALUE
-        set(value) = prefs.edit { putString("ui_mode", value) }
+    override var homeLayout: String
+        get() = prefs.getString("home_layout", HomeLayout.DEFAULT_VALUE) ?: HomeLayout.DEFAULT_VALUE
+        set(value) = prefs.edit { putString("home_layout", value) }
 
     override var checkUpdate: Boolean
         get() = prefs.getBoolean("check_update", true)

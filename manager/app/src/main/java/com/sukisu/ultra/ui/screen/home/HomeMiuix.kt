@@ -253,7 +253,14 @@ private fun StatusCard(
                 }
                 val workingText = "${stringResource(id = R.string.home_working)}$workingMode$workingState"
 
-                Row(
+                if (state.homeLayout == HomeLayout.MiuixMode) {
+                    MiuixModeWorkingCard(
+                        state = state,
+                        workingText = workingText,
+                        onClick = actions.onInstallClick,
+                    )
+                } else {
+                    Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(IntrinsicSize.Min),
@@ -378,6 +385,7 @@ private fun StatusCard(
                         }
                     }
                 }
+                }
             }
 
             state.kernelVersion.isGKI() -> {
@@ -440,6 +448,73 @@ private fun StatusCard(
                         }
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MiuixModeWorkingCard(
+    state: HomeUiState,
+    workingText: String,
+    onClick: () -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(144.dp),
+        colors = CardDefaults.defaultColors(
+            color = when {
+                isDynamicColor -> colorScheme.secondaryContainer
+                isInDarkTheme() -> Color(0xFF1A3825)
+                else -> Color(0xFFDFFAE4)
+            }
+        ),
+        onClick = {
+            if (!state.isLateLoadMode) onClick()
+        },
+        showIndication = !state.isLateLoadMode,
+        pressFeedbackType = PressFeedbackType.Tilt,
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .offset(34.dp, 38.dp),
+                contentAlignment = Alignment.BottomEnd,
+            ) {
+                Icon(
+                    modifier = Modifier.size(150.dp),
+                    imageVector = Icons.Rounded.CheckCircleOutline,
+                    tint = if (isDynamicColor) {
+                        colorScheme.primary.copy(alpha = 0.8f)
+                    } else {
+                        Color(0xFF36D167)
+                    },
+                    contentDescription = null,
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(18.dp),
+            ) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = workingText,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(
+                        R.string.home_working_version,
+                        "${state.ksuVersion}-${state.kernelUAPIVersion}",
+                    ),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                )
             }
         }
     }

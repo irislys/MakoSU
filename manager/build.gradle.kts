@@ -12,24 +12,13 @@ extra["androidBuildToolsVersion"] = "37.0.0"
 extra["androidCompileNdkVersion"] = libs.versions.ndk.get()
 extra["androidSourceCompatibility"] = JavaVersion.VERSION_21
 extra["androidTargetCompatibility"] = JavaVersion.VERSION_21
-extra["managerVersionCode"] = getVersionCode()
+// Keep Manager updates compatible with the currently shipped KernelSU LKM driver.
+extra["managerVersionCode"] = 40837
 extra["managerVersionName"] = getVersionName()
-
-fun getGitCommitCount(): Int {
-    val process = Runtime.getRuntime().exec(arrayOf("git", "rev-list", "--count", "HEAD"))
-    return process.inputStream.bufferedReader().use { it.readText().trim().toInt() }
-}
 
 fun getGitDescribe(): String {
     val process = Runtime.getRuntime().exec(arrayOf("git", "describe", "--tags", "--always", "--abbrev=0"))
     return process.inputStream.bufferedReader().use { it.readText().trim() }
-}
-
-fun getVersionCode(): Int {
-    val commitCount = getGitCommitCount()
-    val major = 4
-    val end = 2815
-    return major * 10000 + commitCount - end
 }
 
 fun getVersionName(): String {

@@ -14,23 +14,13 @@ fun AppProfileConfig(
     profile: Natives.Profile,
     onProfileChange: (Natives.Profile) -> Unit,
 ) {
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> AppProfileConfigMiuix(
+    AppProfileConfigMiuix(
             modifier = modifier,
             fixedName = fixedName,
             enabled = enabled,
             profile = profile,
             onProfileChange = onProfileChange
         )
-
-        UiMode.Material -> AppProfileConfigMaterial(
-            modifier = modifier,
-            fixedName = fixedName,
-            enabled = enabled,
-            profile = profile,
-            onProfileChange = onProfileChange
-        )
-    }
 }
 
 @Composable
@@ -41,22 +31,13 @@ fun RootProfileConfig(
     profile: Natives.Profile,
     onProfileChange: (Natives.Profile) -> Unit,
 ) {
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> RootProfileConfigMiuix(
+    RootProfileConfigMiuix(
             modifier = modifier,
             fixedName = fixedName,
             enabled = enabled,
             profile = profile,
             onProfileChange = onProfileChange
         )
-
-        UiMode.Material -> RootProfileConfigMaterial(
-            modifier = modifier,
-            enabled = enabled,
-            profile = profile,
-            onProfileChange = onProfileChange
-        )
-    }
 }
 
 @Composable
@@ -67,20 +48,11 @@ fun TemplateConfig(
     onManageTemplate: () -> Unit = {},
     onProfileChange: (Natives.Profile) -> Unit
 ) {
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> TemplateConfigMiuix(
+    TemplateConfigMiuix(
             modifier = modifier,
             profile = profile,
             onViewTemplate = onViewTemplate,
             onManageTemplate = onManageTemplate,
             onProfileChange = onProfileChange
         )
-
-        UiMode.Material -> TemplateConfigMaterial(
-            profile = profile,
-            onViewTemplate = onViewTemplate,
-            onManageTemplate = onManageTemplate,
-            onProfileChange = onProfileChange
-        )
-    }
 }

@@ -58,10 +58,7 @@ fun ModuleRepoScreen() {
         },
     )
 
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> ModuleRepoScreenMiuix(uiState, actions)
-        UiMode.Material -> ModuleRepoScreenMaterial(uiState, actions)
-    }
+    ModuleRepoScreenMiuix(uiState, actions)
 }
 
 @Composable
@@ -126,8 +123,5 @@ fun ModuleRepoDetailScreen(module: RepoModuleArg) {
         onInstallModule = { uri -> navigator.push(Route.Flash(FlashIt.FlashModules(listOf(uri)))) },
     )
 
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> ModuleRepoDetailScreenMiuix(state, actions)
-        UiMode.Material -> ModuleRepoDetailScreenMaterial(state, actions)
-    }
+    ModuleRepoDetailScreenMiuix(state, actions)
 }

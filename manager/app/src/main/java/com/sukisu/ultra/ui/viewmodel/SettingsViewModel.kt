@@ -18,6 +18,7 @@ import com.sukisu.ultra.data.repository.SettingsRepository
 import com.sukisu.ultra.data.repository.SettingsRepositoryImpl
 import com.sukisu.ultra.ksuApp
 import com.sukisu.ultra.ui.screen.settings.SettingsUiState
+import com.sukisu.ultra.ui.screen.home.HomeLayout
 import com.sukisu.ultra.ui.theme.ColorMode
 
 class SettingsViewModel(
@@ -66,13 +67,13 @@ class SettingsViewModel(
             val adbRootStatus = repo.getAdbRootStatus()
             val isAdbRootEnabled = repo.getAdbRootPersistValue() == 1L
             val isDefaultUmountModules = repo.isDefaultUmountModules()
-            val uiMode = repo.uiMode
+            val homeLayout = HomeLayout.fromValue(repo.homeLayout)
             val autoJailbreak = repo.autoJailbreak
             val isLateLoadMode = Natives.isLateLoadMode
 
             _uiState.update {
                 it.copy(
-                    uiMode = uiMode,
+                    homeLayout = homeLayout,
                     checkUpdate = checkUpdate,
                     checkModuleUpdate = checkModuleUpdate,
                     alternativeIcon = alternativeIcon,
@@ -113,28 +114,9 @@ class SettingsViewModel(
         _uiState.update { it.copy(checkUpdate = enabled) }
     }
 
-    fun setUiMode(mode: String) {
-        val oldMode = repo.uiMode
-        val currentThemeMode = repo.themeMode
-
-        val newThemeMode = when (oldMode) {
-            "material" if mode == "miuix" -> {
-                ColorMode.fromValue(currentThemeMode).forMiuix(repo.miuixMonet).value
-            }
-
-            "miuix" if mode == "material" -> {
-                val colorMode = ColorMode.fromValue(currentThemeMode)
-                if (colorMode.isMonet) {
-                    colorMode.toNonMonetMode()
-                } else currentThemeMode
-            }
-
-            else -> currentThemeMode
-        }
-
-        repo.uiMode = mode
-        repo.themeMode = newThemeMode
-        _uiState.update { it.copy(uiMode = mode, themeMode = newThemeMode) }
+    fun setHomeLayout(layout: HomeLayout) {
+        repo.homeLayout = layout.value
+        _uiState.update { it.copy(homeLayout = layout) }
     }
 
     fun setCheckModuleUpdate(enabled: Boolean) {
@@ -148,8 +130,7 @@ class SettingsViewModel(
     }
 
     fun setThemeMode(mode: Int) {
-        val currentUiMode = repo.uiMode
-        val effectiveMode = if (currentUiMode == "miuix" && _uiState.value.miuixMonet) {
+        val effectiveMode = if (_uiState.value.miuixMonet) {
             ColorMode.fromValue(mode).forMiuix(monetEnabled = true).value
         } else {
             mode

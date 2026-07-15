@@ -196,8 +196,6 @@
     <string name="settings_monet">Kích hoạt Monet</string>
     <string name="settings_key_color">Màu nhấn</string>
     <string name="settings_key_color_default">Mặc định</string>
-    <string name="settings_ui_mode">Kiểu UI</string>
-    <string name="settings_ui_mode_summary">Chọn kiểu giao diện.</string>
     <string name="settings_page_scale">Tỷ lệ DPI</string>
     <string name="settings_page_scale_summary">Điều chỉnh tỷ lệ DPI hiển thị.</string>
     <string name="settings_color_spec">Thông số màu sắc</string>

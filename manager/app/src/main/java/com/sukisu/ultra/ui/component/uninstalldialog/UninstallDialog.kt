@@ -9,8 +9,5 @@ fun UninstallDialog(
     show: Boolean,
     onDismissRequest: () -> Unit
 ) {
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> UninstallDialogMiuix(show, onDismissRequest)
-        UiMode.Material -> UninstallDialogMaterial(show, onDismissRequest)
-    }
+    UninstallDialogMiuix(show, onDismissRequest)
 }

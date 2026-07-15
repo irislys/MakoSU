@@ -300,10 +300,7 @@ fun rememberLoadingDialog(): LoadingDialogHandle {
     val visible = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> LoadingDialogMiuix(visible)
-        UiMode.Material -> LoadingDialogMaterial(visible)
-    }
+    LoadingDialogMiuix(visible)
 
     return remember {
         LoadingDialogHandleImpl(visible, coroutineScope)
@@ -327,21 +324,12 @@ private fun rememberConfirmDialog(visuals: ConfirmDialogVisuals, callback: Confi
         }
     )
 
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> ConfirmDialogMiuix(
+    ConfirmDialogMiuix(
             handle.visuals,
             confirm = { coroutineScope.launch { resultChannel.send(ConfirmResult.Confirmed) } },
             dismiss = { coroutineScope.launch { resultChannel.send(ConfirmResult.Canceled) } },
             showDialog = visible
         )
-
-        UiMode.Material -> ConfirmDialogMaterial(
-            handle.visuals,
-            confirm = { coroutineScope.launch { resultChannel.send(ConfirmResult.Confirmed) } },
-            dismiss = { coroutineScope.launch { resultChannel.send(ConfirmResult.Canceled) } },
-            showDialog = visible
-        )
-    }
 
     return handle
 }

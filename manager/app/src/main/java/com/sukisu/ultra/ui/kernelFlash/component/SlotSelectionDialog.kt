@@ -10,16 +10,9 @@ fun SlotSelectionDialog(
     onDismiss: () -> Unit,
     onSlotSelected: (String) -> Unit,
 ) {
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> SlotSelectionDialogMiuix(
+    SlotSelectionDialogMiuix(
             show = show,
             onDismiss = onDismiss,
             onSlotSelected = onSlotSelected
         )
-        UiMode.Material -> SlotSelectionDialogMaterial(
-            show = show,
-            onDismiss = onDismiss,
-            onSlotSelected = onSlotSelected
-        )
-    }
 }

@@ -34,8 +34,5 @@ fun AboutScreen() {
         onOpenLink = uriHandler::openUri,
     )
 
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> AboutScreenMiuix(state, actions)
-        UiMode.Material -> AboutScreenMaterial(state, actions)
-    }
+    AboutScreenMiuix(state, actions)
 }

@@ -1,7 +1,6 @@
 package com.sukisu.ultra.ui.screen.appprofile
 
 import android.widget.Toast
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -18,8 +17,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import com.sukisu.ultra.Natives
 import com.sukisu.ultra.R
-import com.sukisu.ultra.ui.LocalUiMode
-import com.sukisu.ultra.ui.UiMode
 import com.sukisu.ultra.ui.navigation3.LocalNavigator
 import com.sukisu.ultra.ui.navigation3.Route
 import com.sukisu.ultra.ui.util.forceStopApp
@@ -32,10 +29,8 @@ import com.sukisu.ultra.ui.viewmodel.getTemplateInfoById
 
 @Composable
 fun AppProfileScreen(uid: Int) {
-    val uiMode = LocalUiMode.current
     val navigator = LocalNavigator.current
     val context = LocalContext.current
-    val snackbarHost = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val viewModel: SuperUserViewModel = viewModel()
     val appGroupState = remember(uid) {
@@ -76,11 +71,7 @@ fun AppProfileScreen(uid: Int) {
 
     fun showMessage(message: String) {
         scope.launch {
-            if (uiMode == UiMode.Material) {
-                snackbarHost.showSnackbar(message)
-            } else {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -124,24 +115,13 @@ fun AppProfileScreen(uid: Int) {
                     showMessage(failToUpdateAppProfile)
                 } else {
                     profile = updatedProfile
-                    if (uiMode == UiMode.Material) {
-                        viewModel.loadAppList()
-                    }
                 }
             }
         },
     )
 
-    when (uiMode) {
-        UiMode.Miuix -> AppProfileScreenMiuix(
+    AppProfileScreenMiuix(
             state = state,
             actions = actions,
         )
-
-        UiMode.Material -> AppProfileScreenMaterial(
-            state = state,
-            actions = actions,
-            snackBarHost = snackbarHost,
-        )
-    }
 }

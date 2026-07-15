@@ -3,11 +3,11 @@ package com.sukisu.ultra.ui.screen.settings
 import androidx.compose.runtime.Immutable
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamiccolor.ColorSpec
-import com.sukisu.ultra.ui.UiMode
+import com.sukisu.ultra.ui.screen.home.HomeLayout
 
 @Immutable
 data class SettingsUiState(
-    val uiMode: String = UiMode.DEFAULT_VALUE,
+    val homeLayout: HomeLayout = HomeLayout.Standard,
     val checkUpdate: Boolean = true,
     val checkModuleUpdate: Boolean = true,
     val alternativeIcon : Boolean = false,
@@ -60,7 +60,7 @@ data class SettingsScreenActions(
     val onSetCheckUpdate: (Boolean) -> Unit,
     val onSetCheckModuleUpdate: (Boolean) -> Unit,
     val onOpenTheme: () -> Unit,
-    val onSetUiModeIndex: (Int) -> Unit,
+    val onSetHomeLayout: (HomeLayout) -> Unit,
     val onOpenProfileTemplate: () -> Unit,
     val onSetSuCompatMode: (Int) -> Unit,
     val onSetKernelUmountEnabled: (Boolean) -> Unit,

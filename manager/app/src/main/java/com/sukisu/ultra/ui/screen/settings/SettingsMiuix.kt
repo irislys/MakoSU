@@ -43,7 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sukisu.ultra.R
-import com.sukisu.ultra.ui.UiMode
+import com.sukisu.ultra.ui.screen.home.HomeLayout
 import com.sukisu.ultra.ui.component.KsuIsValid
 import com.sukisu.ultra.ui.component.dialog.rememberLoadingDialog
 import com.sukisu.ultra.ui.component.miuix.SendLogDialog
@@ -153,19 +153,26 @@ fun SettingPagerMiuix(
                             .fillMaxWidth(),
                     ) {
                         OverlayDropdownPreference(
-                            title = stringResource(id = R.string.settings_ui_mode),
-                            summary = stringResource(id = R.string.settings_ui_mode_summary),
-                            items = UiMode.entries.map { it.name },
+                            title = stringResource(id = R.string.settings_home_layout),
+                            summary = stringResource(id = R.string.settings_home_layout_summary),
+                            items = listOf(
+                                stringResource(id = R.string.settings_home_layout_standard),
+                                stringResource(id = R.string.settings_home_layout_miuix_mode),
+                            ),
                             startAction = {
                                 Icon(
                                     Icons.Rounded.Dashboard,
                                     modifier = Modifier.padding(end = 6.dp),
-                                    contentDescription = stringResource(id = R.string.settings_ui_mode),
+                                    contentDescription = stringResource(id = R.string.settings_home_layout),
                                     tint = colorScheme.onBackground
                                 )
                             },
-                            selectedIndex = if (uiState.uiMode == UiMode.Material.value) 1 else 0,
-                            onSelectedIndexChange = actions.onSetUiModeIndex
+                            selectedIndex = if (uiState.homeLayout == HomeLayout.MiuixMode) 1 else 0,
+                            onSelectedIndexChange = { index ->
+                                actions.onSetHomeLayout(
+                                    if (index == 1) HomeLayout.MiuixMode else HomeLayout.Standard
+                                )
+                            }
                         )
                         ArrowPreference(
                             title = stringResource(id = R.string.settings_theme),

@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import com.sukisu.ultra.ui.LocalUiMode
 import com.sukisu.ultra.ui.UiMode
 import com.sukisu.ultra.ui.screen.susfs.component.miuix.BottomActionButtonsMiuix
-import com.sukisu.ultra.ui.screen.susfs.component.material.BottomActionButtonsMaterial
 
 @Composable
 fun BottomActionButtons(
@@ -17,8 +16,7 @@ fun BottomActionButtons(
     isLoading: Boolean = false,
     enabled: Boolean = true
 ) {
-    when (LocalUiMode.current) {
-        UiMode.Miuix -> BottomActionButtonsMiuix(
+    BottomActionButtonsMiuix(
             modifier = modifier,
             primaryButtonText = primaryButtonText,
             onPrimaryClick = onPrimaryClick,
@@ -27,14 +25,4 @@ fun BottomActionButtons(
             isLoading = isLoading,
             enabled = enabled
         )
-        UiMode.Material -> BottomActionButtonsMaterial(
-            modifier = modifier,
-            primaryButtonText = primaryButtonText,
-            onPrimaryClick = onPrimaryClick,
-            secondaryButtonText = secondaryButtonText,
-            onSecondaryClick = onSecondaryClick,
-            isLoading = isLoading,
-            enabled = enabled
-        )
-    }
 }

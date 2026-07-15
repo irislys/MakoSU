@@ -33,6 +33,7 @@ import androidx.compose.material.icons.automirrored.rounded.MenuOpen
 import androidx.compose.material.icons.rounded.AspectRatio
 import androidx.compose.material.icons.rounded.BlurOn
 import androidx.compose.material.icons.rounded.CallToAction
+import androidx.compose.material.icons.rounded.CheckCircleOutline
 import androidx.compose.material.icons.rounded.Colorize
 import androidx.compose.material.icons.rounded.DesignServices
 import androidx.compose.material.icons.rounded.Style
@@ -63,6 +64,7 @@ import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.rememberDynamicColorScheme
 import com.sukisu.ultra.R
 import com.sukisu.ultra.ui.component.miuix.ScaleDialog
+import com.sukisu.ultra.ui.screen.home.HomeLayout
 import com.sukisu.ultra.ui.theme.LocalEnableBlur
 import com.sukisu.ultra.ui.theme.keyColorOptions
 import com.sukisu.ultra.ui.util.BlurredBar
@@ -150,6 +152,7 @@ fun ColorPaletteScreenMiuix(
                         miuixMonet = uiState.miuixMonet,
                         enableFloatingBottomBar = uiState.enableFloatingBottomBar,
                         enableFloatingBottomBarBlur = uiState.enableFloatingBottomBarBlur,
+                        homeLayout = uiState.homeLayout,
                         paletteStyle = state.currentPaletteStyle,
                         colorSpec = state.currentColorSpec,
                     )
@@ -444,6 +447,7 @@ private fun ThemePreviewCardMiuix(
     miuixMonet: Boolean,
     enableFloatingBottomBar: Boolean = false,
     enableFloatingBottomBarBlur: Boolean = false,
+    homeLayout: HomeLayout = HomeLayout.Standard,
     paletteStyle: PaletteStyle = PaletteStyle.TonalSpot,
     colorSpec: ColorSpec.SpecVersion = ColorSpec.SpecVersion.SPEC_2021,
 ) {
@@ -504,40 +508,60 @@ private fun ThemePreviewCardMiuix(
                     )
                 }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(65.dp)
-                        .padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
+                if (homeLayout == HomeLayout.MiuixMode) {
                     Box(
                         modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
+                            .fillMaxWidth()
+                            .height(54.dp)
+                            .padding(horizontal = 8.dp)
                             .clip(RoundedCornerShape(6.dp))
                             .background(accentCardColor)
-                    )
-                    Column(
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .size(48.dp),
+                            imageVector = Icons.Rounded.CheckCircleOutline,
+                            tint = iconColor.copy(alpha = 0.8f),
+                            contentDescription = null,
+                        )
+                    }
+                } else {
+                    Row(
                         modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                            .fillMaxWidth()
+                            .height(65.dp)
+                            .padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth()
                                 .weight(1f)
+                                .fillMaxHeight()
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(cardColor)
+                                .background(accentCardColor)
                         )
-                        Box(
+                        Column(
                             modifier = Modifier
-                                .fillMaxWidth()
                                 .weight(1f)
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(cardColor)
-                        )
+                                .fillMaxHeight(),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(cardColor)
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(cardColor)
+                            )
+                        }
                     }
                 }
 
