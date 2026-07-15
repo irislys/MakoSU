@@ -1,36 +1,18 @@
 # MakoSU
 
-<p align="center">
-  <img src="docs/MakoSU-mini.png" width="180" alt="MakoSU logo">
-</p>
+<img align="right" src="docs/MakoSU-mini.png" width="220px" alt="MakoSU logo">
 
-<p align="center">
-  <strong>简体中文</strong> ·
-  <a href="docs/README.md">English</a> ·
-  <a href="docs/zh-TW/README.md">繁體中文</a> ·
-  <a href="docs/ja/README.md">日本語</a> ·
-  <a href="docs/ko/README.md">한국어</a> ·
-  <a href="docs/ru/README.md">Русский</a> ·
-  <a href="docs/tr/README.md">Türkçe</a>
-</p>
+[English](docs/README.md) | **简体中文** | [繁體中文](docs/zh-TW/README.md) | [日本語](docs/ja/README.md) | [한국어](docs/ko/README.md) | [Русский](docs/ru/README.md) | [Türkçe](docs/tr/README.md)
 
-<p align="center">
-  面向 GKI Android 设备的内核 Root 管理器，关注 KMI 匹配、SuSFS 配置可靠性和可恢复维护。
-</p>
+面向 GKI Android 设备的内核 Root 管理器，关注 KMI 匹配、SuSFS 配置可靠性和可恢复维护。
 
-<p align="center">
-  <a href="https://spring-bulid.github.io/MakoSU/">官网</a> ·
-  <a href="https://spring-bulid.github.io/MakoSU/guide/">使用文档</a> ·
-  <a href="https://github.com/Spring-bulid/MakoSU/releases">下载 Release</a> ·
-  <a href="https://github.com/Spring-bulid/MakoSU/issues">反馈问题</a>
-</p>
+[项目官网](https://spring-bulid.github.io/MakoSU/) | [在线文档](https://spring-bulid.github.io/MakoSU/guide/) | [GitHub Releases](https://github.com/Spring-bulid/MakoSU/releases) | [问题反馈](https://github.com/Spring-bulid/MakoSU/issues)
 
-<p align="center">
-  <a href="https://github.com/Spring-bulid/MakoSU/actions/workflows/deploy-website.yml"><img src="https://github.com/Spring-bulid/MakoSU/actions/workflows/deploy-website.yml/badge.svg" alt="Website deployment"></a>
-  <a href="https://github.com/Spring-bulid/MakoSU/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-multiple-orange.svg" alt="License"></a>
-  <a href="https://github.com/Spring-bulid/MakoSU/releases"><img src="https://img.shields.io/badge/KMI-5.10--6.12-2f7259.svg" alt="KMI range"></a>
-  <a href="https://github.com/Spring-bulid/MakoSU"><img src="https://img.shields.io/github/stars/Spring-bulid/MakoSU?style=flat" alt="GitHub stars"></a>
-</p>
+[![最新发行](https://img.shields.io/github/v/release/Spring-bulid/MakoSU?label=Release&logo=github)](https://github.com/Spring-bulid/MakoSU/releases/latest)
+[![网站部署](https://github.com/Spring-bulid/MakoSU/actions/workflows/deploy-website.yml/badge.svg)](https://github.com/Spring-bulid/MakoSU/actions/workflows/deploy-website.yml)
+[![协议](https://img.shields.io/badge/License-Multiple-orange.svg?logo=gnu)](LICENSE)
+[![KMI](https://img.shields.io/badge/KMI-5.10--6.12-2f7259.svg)](https://github.com/Spring-bulid/MakoSU/releases)
+[![GitHub Stars](https://img.shields.io/github/stars/Spring-bulid/MakoSU?style=flat)](https://github.com/Spring-bulid/MakoSU)
 
 MakoSU 是 [SukiSU Ultra](https://github.com/SukiSU-Ultra/SukiSU-Ultra) 的下游维护项目，主要维护 Manager、正式 KMI 模块、SuSFS 用户空间功能和相关构建脚本。项目参考 [ReSukiSU](https://github.com/ReSukiSU/ReSukiSU) 的维护思路，优先处理身份契约、失败回滚和可复现构建。
 
