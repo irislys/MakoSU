@@ -14,8 +14,9 @@ import com.sukisu.ultra.ui.navigation3.Route
 import com.sukisu.ultra.ui.screen.flash.FlashIt
 import com.sukisu.ultra.ui.viewmodel.ModuleRepoViewModel
 import com.sukisu.ultra.ui.viewmodel.ModuleViewModel
-import com.sukisu.ultra.ui.util.module.ModuleDetail
 import com.sukisu.ultra.ui.util.module.fetchModuleDetail
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 fun ModuleRepoScreen() {
@@ -69,46 +70,45 @@ fun ModuleRepoScreen() {
 fun ModuleRepoDetailScreen(module: RepoModuleArg) {
     val navigator = LocalNavigator.current
     val uriHandler = LocalUriHandler.current
-    var detail by remember(module.moduleId) { mutableStateOf<ModuleDetail?>(null) }
-    LaunchedEffect(module.moduleId) {
-        detail = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-            fetchModuleDetail(module.moduleId)
-        }
+    var readmeHtml by remember(module.moduleId) { mutableStateOf<String?>(null) }
+    var readmeLoaded by remember(module.moduleId) { mutableStateOf(false) }
+    var detailReleases by remember(module.moduleId) { mutableStateOf<List<ReleaseArg>>(emptyList()) }
+    var webUrl by remember(module.moduleId) {
+        mutableStateOf(module.url.ifBlank { "https://irislys.github.io/MakoSU_ModuleDownload/module/${module.moduleId}/" })
     }
-    val loaded = detail
-    val sourceUrl = loaded?.sourceUrl.orEmpty().ifBlank { module.sourceUrl }
-    val webUrl = loaded?.url.orEmpty().ifBlank { module.url }
-    val detailReleases = loaded?.releases?.map { release ->
-        ReleaseArg(
-            tagName = release.tagName,
-            name = release.name,
-            publishedAt = release.publishedAt,
-            assets = release.assets.map { asset ->
-                ReleaseAssetArg(asset.name, asset.downloadUrl, asset.size, asset.downloadCount)
-            },
-            descriptionHTML = release.descriptionHTML,
-        )
-    } ?: module.releases
-    val readmeHtml = loaded?.readmeHtml?.takeIf { it.isNotBlank() }
-        ?: module.summary.takeIf { it.isNotBlank() }
-    val displayModule = loaded?.let {
-        module.copy(
-            moduleName = it.moduleName.ifBlank { module.moduleName },
-            authors = it.authors.joinToString(", ") { author -> author.name },
-            authorsList = it.authors.map { author -> AuthorArg(author.name, author.link) },
-            summary = it.summary,
-            latestRelease = it.latestTag,
-            latestReleaseTime = it.latestTime,
-            url = it.url,
-            homepageUrl = it.homepageUrl,
-            sourceUrl = it.sourceUrl,
-        )
-    } ?: module
+    var sourceUrl by remember(module.moduleId) { mutableStateOf(module.sourceUrl) }
+    LaunchedEffect(module.moduleId) {
+        if (module.moduleId.isNotBlank()) {
+            withContext(Dispatchers.IO) {
+                runCatching { fetchModuleDetail(module.moduleId) }
+                    .onSuccess { detail ->
+                        if (detail != null) {
+                            readmeHtml = detail.readmeHtml.takeIf { it.isNotBlank() }
+                            webUrl = detail.url.ifBlank { webUrl }
+                            sourceUrl = detail.sourceUrl.ifBlank { sourceUrl }
+                            detailReleases = detail.releases.map { release ->
+                                ReleaseArg(
+                                    tagName = release.tagName,
+                                    name = release.name,
+                                    publishedAt = release.publishedAt,
+                                    assets = release.assets.map { asset ->
+                                        ReleaseAssetArg(asset.name, asset.downloadUrl, asset.size, asset.downloadCount)
+                                    },
+                                    descriptionHTML = release.descriptionHTML,
+                                )
+                            }
+                        }
+                    }
+                    .onFailure { detailReleases = emptyList() }
+            }
+        }
+        readmeLoaded = true
+    }
 
     val state = ModuleRepoDetailUiState(
-        module = displayModule,
+        module = module,
         readmeHtml = readmeHtml,
-        readmeLoaded = true,
+        readmeLoaded = readmeLoaded,
         detailReleases = detailReleases,
         webUrl = webUrl,
         sourceUrl = sourceUrl,

@@ -687,7 +687,7 @@ fun ReleasesPage(
                                 )
                             }
                             AnimatedVisibility(
-                                visible = rel.assets.isNotEmpty(),
+                                visible = rel.assets.isNotEmpty() || rel.descriptionHTML.isNotEmpty(),
                                 enter = fadeIn() + expandVertically(),
                                 exit = fadeOut() + shrinkVertically()
                             ) {
