@@ -75,7 +75,9 @@ jobs:
         run: |
           apk=$(find app/build/outputs/apk/release -type f -name '*.apk' | head -n 1)
           test -n "$apk"
-          apksigner verify --verbose --print-certs "$apk"
+          apksigner=$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)
+          test -x "$apksigner"
+          "$apksigner" verify --verbose --print-certs "$apk"
 
       - name: Upload signed Manager APK
         uses: actions/upload-artifact@v4
