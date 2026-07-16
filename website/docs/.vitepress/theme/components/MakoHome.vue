@@ -64,7 +64,7 @@ const copy = computed(() =>
           '更换包名或证书不是单独的界面修改。任何身份字段发生变化，都需要重新构建 KMI 并验证 APK v2 证书。',
         contract: [
           ['应用包名', 'com.makosu.manager'],
-          ['证书 DER 大小', '0x0549'],
+          ['证书 DER 大小', '0x0585'],
           ['Release KMI', '7'],
           ['用户空间 ABI', 'arm64 / armv7 / x86_64'],
         ],
@@ -157,7 +157,7 @@ const copy = computed(() =>
           'Changing the package or certificate is not a cosmetic edit. Every identity change requires rebuilt KMIs and another APK v2 certificate verification.',
         contract: [
           ['Application package', 'com.makosu.manager'],
-          ['Certificate DER size', '0x0549'],
+          ['Certificate DER size', '0x0585'],
           ['Release KMIs', '7'],
           ['Userspace ABIs', 'arm64 / armv7 / x86_64'],
         ],

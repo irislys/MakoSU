@@ -77,8 +77,8 @@ MakoSU の SuSFS userspace 実装には、次の保護が含まれます。
 | 項目 | 値 |
 | --- | --- |
 | パッケージ | `com.makosu.manager` |
-| 証明書 DER サイズ | `0x0549` |
-| 証明書 SHA-256 | `7eb729e2d76e05488cc4150825e69be9a8beca33bf606ea9217e163eea3b3943` |
+| 証明書 DER サイズ | `0x0585` |
+| 証明書 SHA-256 | `19faea4e5ef5db4e8293183b7c98da92e902e13240cb65f829f65aea761619a2` |
 
 この契約を変更した場合は、すべての KMI を再ビルドし、APK v2 証明書を再確認する必要があります。
 

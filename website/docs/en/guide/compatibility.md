@@ -58,7 +58,7 @@ Android 11 / 5.4 (GKI 1.0) is outside the current MakoSU formal release and bund
 | Field                | Release value                                                      |
 | -------------------- | ------------------------------------------------------------------ |
 | Application package  | `com.makosu.manager`                                               |
-| Certificate DER size | `0x0549`                                                           |
-| Certificate SHA-256  | `7eb729e2d76e05488cc4150825e69be9a8beca33bf606ea9217e163eea3b3943` |
+| Certificate DER size | `0x0585`                                                           |
+| Certificate SHA-256  | `19faea4e5ef5db4e8293183b7c98da92e902e13240cb65f829f65aea761619a2` |
 
 Changing any identity field requires rebuilding every formal KMI and verifying the APK v2 certificate again.

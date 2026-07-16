@@ -1,0 +1,96 @@
+name: Signed Build
+
+on:
+  workflow_call:
+    secrets:
+      MAKOSU_KEYSTORE_BASE64:
+        required: true
+      MAKOSU_KEYSTORE_PASSWORD:
+        required: true
+      MAKOSU_KEY_ALIAS:
+        required: true
+      MAKOSU_KEY_PASSWORD:
+        required: true
+      KSU_MODULE_SIGN_KEY:
+        required: true
+      KSU_MODULE_SIGN_CERT:
+        required: true
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  manager-release:
+    name: Build signed Manager APK
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: manager
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+      - uses: android-actions/setup-android@v3
+
+      - name: Restore local signing key
+        env:
+          KEYSTORE_B64: ${{ secrets.MAKOSU_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.MAKOSU_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.MAKOSU_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.MAKOSU_KEY_PASSWORD }}
+        run: |
+          test -n "$KEYSTORE_B64"
+          test -n "$KEYSTORE_PASSWORD"
+          test -n "$KEY_ALIAS"
+          test -n "$KEY_PASSWORD"
+          printf '%s' "$KEYSTORE_B64" | base64 --decode > makosu-release.jks
+          umask 077
+          cat > makosu-signing.properties <<EOF
+          KEYSTORE_FILE=makosu-release.jks
+          KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD
+          KEY_ALIAS=$KEY_ALIAS
+          KEY_PASSWORD=$KEY_PASSWORD
+          EOF
+
+      - name: Build signed Release APK
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:assembleRelease --no-daemon --stacktrace
+
+      - name: Verify APK certificate
+        run: |
+          apk=$(find app/build/outputs/apk/release -type f -name '*.apk' | head -n 1)
+          test -n "$apk"
+          apksigner verify --verbose --print-certs "$apk"
+
+      - name: Upload signed Manager APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: makosu-manager-signed
+          path: manager/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+
+  lkm:
+    name: Build signed LKM (${{ matrix.kmi }})
+    strategy:
+      fail-fast: false
+      matrix:
+        kmi:
+          - android12-5.10
+          - android13-5.10
+          - android13-5.15
+          - android14-5.15
+          - android14-6.1
+          - android15-6.6
+          - android16-6.12
+    uses: ./.github/workflows/ddk-lkm.yml
+    with:
+      kmi: ${{ matrix.kmi }}
+      ddk_release: "20260313"
+    secrets: inherit

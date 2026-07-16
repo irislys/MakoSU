@@ -62,8 +62,8 @@ Yalnızca ana çekirdek sürümüne bakarak LKM yüklemeyin. Üretici ABI'si, se
 | Alan | Değer |
 | --- | --- |
 | Paket | `com.makosu.manager` |
-| Sertifika DER boyutu | `0x0549` |
-| Sertifika SHA-256 | `7eb729e2d76e05488cc4150825e69be9a8beca33bf606ea9217e163eea3b3943` |
+| Sertifika DER boyutu | `0x0585` |
+| Sertifika SHA-256 | `19faea4e5ef5db4e8293183b7c98da92e902e13240cb65f829f65aea761619a2` |
 
 Kimlik alanlarından biri değişirse tüm KMI'ler yeniden derlenmeli ve APK v2 sertifikası tekrar doğrulanmalıdır.
 

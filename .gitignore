@@ -11,6 +11,7 @@ __pycache__
 /manager/*.jks
 /manager/makosu-signing.properties
 /manager/makosu-release-cert.der
+/signing/
 .cache/
 .wsl/
 /website/node_modules/
