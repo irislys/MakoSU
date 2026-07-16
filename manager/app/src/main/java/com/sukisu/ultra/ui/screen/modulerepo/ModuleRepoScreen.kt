@@ -72,43 +72,55 @@ fun ModuleRepoDetailScreen(module: RepoModuleArg) {
     val uriHandler = LocalUriHandler.current
     var readmeHtml by remember(module.moduleId) { mutableStateOf<String?>(null) }
     var readmeLoaded by remember(module.moduleId) { mutableStateOf(false) }
+    var detailLoaded by remember(module.moduleId) { mutableStateOf(false) }
     var detailReleases by remember(module.moduleId) { mutableStateOf<List<ReleaseArg>>(emptyList()) }
     var webUrl by remember(module.moduleId) {
         mutableStateOf(module.url.ifBlank { "https://irislys.github.io/MakoSU_ModuleDownload/module/${module.moduleId}/" })
     }
     var sourceUrl by remember(module.moduleId) { mutableStateOf(module.sourceUrl) }
     LaunchedEffect(module.moduleId) {
-        if (module.moduleId.isNotBlank()) {
-            withContext(Dispatchers.IO) {
-                runCatching { fetchModuleDetail(module.moduleId) }
-                    .onSuccess { detail ->
-                        if (detail != null) {
-                            readmeHtml = detail.readmeHtml.takeIf { it.isNotBlank() }
-                            webUrl = detail.url.ifBlank { webUrl }
-                            sourceUrl = detail.sourceUrl.ifBlank { sourceUrl }
-                            detailReleases = detail.releases.map { release ->
-                                ReleaseArg(
-                                    tagName = release.tagName,
-                                    name = release.name,
-                                    publishedAt = release.publishedAt,
-                                    assets = release.assets.map { asset ->
-                                        ReleaseAssetArg(asset.name, asset.downloadUrl, asset.size, asset.downloadCount)
-                                    },
-                                    descriptionHTML = release.descriptionHTML,
-                                )
-                            }
-                        }
-                    }
-                    .onFailure { detailReleases = emptyList() }
+        if (module.moduleId.isBlank()) {
+            readmeLoaded = true
+            detailLoaded = true
+            return@LaunchedEffect
+        }
+
+        val result = withContext(Dispatchers.IO) {
+            runCatching { fetchModuleDetail(module.moduleId) }
+        }
+        result.onSuccess { detail ->
+            if (detail != null) {
+                readmeHtml = detail.readmeHtml.takeIf { it.isNotBlank() }
+                webUrl = detail.url.ifBlank { webUrl }
+                sourceUrl = detail.sourceUrl.ifBlank { sourceUrl }
+                detailReleases = detail.releases.map { release ->
+                    ReleaseArg(
+                        tagName = release.tagName,
+                        name = release.name,
+                        publishedAt = release.publishedAt,
+                        assets = release.assets.map { asset ->
+                            ReleaseAssetArg(asset.name, asset.downloadUrl, asset.size, asset.downloadCount)
+                        },
+                        descriptionHTML = release.descriptionHTML,
+                    )
+                }
+            } else {
+                readmeHtml = null
+                detailReleases = emptyList()
             }
+        }.onFailure {
+            readmeHtml = null
+            detailReleases = emptyList()
         }
         readmeLoaded = true
+        detailLoaded = true
     }
 
     val state = ModuleRepoDetailUiState(
         module = module,
         readmeHtml = readmeHtml,
         readmeLoaded = readmeLoaded,
+        detailLoaded = detailLoaded,
         detailReleases = detailReleases,
         webUrl = webUrl,
         sourceUrl = sourceUrl,

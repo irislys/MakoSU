@@ -616,6 +616,7 @@ private fun ReadmePage(
 @SuppressLint("DefaultLocale")
 @Composable
 fun ReleasesPage(
+    detailLoaded: Boolean,
     detailReleases: List<ReleaseArg>,
     innerPadding: PaddingValues,
     scrollBehavior: ScrollBehavior,
@@ -645,7 +646,16 @@ fun ReleasesPage(
             ),
             overscrollEffect = null,
         ) {
-            if (detailReleases.isNotEmpty()) {
+            if (!detailLoaded) {
+                item {
+                    Box(
+                        modifier = Modifier.fillParentMaxSize(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        InfiniteProgressIndicator()
+                    }
+                }
+            } else if (detailReleases.isNotEmpty()) {
                 item {
                     Spacer(Modifier.height(6.dp))
                 }
@@ -1126,6 +1136,7 @@ fun ModuleRepoDetailScreenMiuix(
                 )
 
                 1 -> ReleasesPage(
+                    detailLoaded = state.detailLoaded,
                     detailReleases = state.detailReleases,
                     innerPadding = innerPadding,
                     scrollBehavior = scrollBehavior,

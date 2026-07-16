@@ -37,6 +37,7 @@ data class ModuleRepoDetailUiState(
     val module: RepoModuleArg,
     val readmeHtml: String?,
     val readmeLoaded: Boolean,
+    val detailLoaded: Boolean,
     val detailReleases: List<ReleaseArg>,
     val webUrl: String,
     val sourceUrl: String,
